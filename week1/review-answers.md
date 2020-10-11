@@ -57,6 +57,7 @@ sbt is a software tool for building Scala and Java projects. It helps organize a
 
 Scala programs are translated into Java bytecode which is loaded into the JRE along with the classes and libraries it requires. The JVM is installed along witht he JRE and the JVM interprets the bytecode. The JVM does the heavy lifting when it comes with interacting with different operating systems and computers. A useful illustration is available at https://getkt.com/blog/difference-between-jdk-jre-and-jvm-explained-java/
 
+---
 # Day 2
 
 - Is Scala statically or dynamically typed?
@@ -199,6 +200,7 @@ REPL stands for Read-Evaluate-Print-Loop and is a command line tool that can be 
 
 The REPL will store the results (return values) of evaluated expressions in a variable that is available for reuse.
 
+---
 # Day 3
 
 - What is a higher order function?
@@ -258,6 +260,9 @@ To prevent a recursive function from calling itself infinitely there needs to be
 
 Parameterized typing is where we say Array[Int] to make an int array or Array[String] to make a string array. Parameterized typing just means that the type is accepted as a parameter. (samuel owens)
 
+---
+# Day 4
+
 - What is the Stack? What is stored on the Stack?
 
 The Stack is an allocated portion of memory that is created for each thread of a program.  During runtime, functions are added to the Stack in a LIFO (Last In First Out) order.  Along with the functions, local variables are stored in the stack and references to objects that are being stored in the heap.  Everytime a function is called, it is pushed onto the stack.  It will then be popped off the stack, evaluated and a result is returned.  After the function completes execution, the memory space is cleaned up, the local variables are discarded and it pops off the next function in the stack.
@@ -292,6 +297,10 @@ When there are no longer references to them from any stack.
 - What is Throwable?
 - How would we write code that handles a thrown Exception?
 - How do we write code to throw an Exception?
+
+
+---
+# Day 5
 
 - What does the src folder contain in an sbt project?
 - the target folder?
