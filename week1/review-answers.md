@@ -185,15 +185,15 @@ An auxillary constructor takes care of cases where a function is not provided wi
   
 - What is an enumeration?  
   
-An enumeration is a limited set of values for a particular case. We can use enumerations to limit the choices that can be sent to a function to prevent input values that are outside of what values are expected.  
+An enumeration defines a finite set of constant values.   Scala's Enumeration class is extended to create enumerations, whose values are defined as vals, and wgucg are iterable and immutable.
   
 - What is a REPL?  
   
-REPL stands for Read-Evaluate-Print-Loop and is a command line tool that can be used to try out Scala code. To enter the Scala REPL, use the command `scala` or open a Scala worksheet in Intellij. You will be able to write Scala expressions and see the output. The REPL will automatically assign variables for the output of expressions. Use :help for list of commands, :quit to exit.  
+REPL (Read-Evaluate-Print-Loop) is a CLI used to execute Scala code. To enter the Scala REPL, use the command `scala` or open a Scala worksheet in Intellij. You will be able to write a Scala expression and the REPL will evaluate its value. The REPL automatically assign variables for the output of expressions. Use :help for list of commands, :quit to exit.  
   
 - How does the Scala REPL store the results of evaluated expressions?  
   
-The REPL will store the results (return values) of evaluated expressions in a variable that is available for reuse.  
+If the user doesn't define a variable name, the REPL will automatically store them in the form "res0, res1, res2...res-n)
   
 ---  
 # Day 3  
@@ -203,23 +203,25 @@ The REPL will store the results (return values) of evaluated expressions in a va
 A higher order function is a function that either takes a function as an argument or returns a function.  
   
 - What is function composition?  
-  
-Function composition is the act of building more complex functions by combining simple functions. It encourages the factoring (breaking apart) of complex functions. The result of one function is passed into the next function as an argument. The result of the final function is the result of the whole.  
+
+Function composition the building of complex function with simple functions.  Readibility and facility of reuse is improved by factoring (breaking apart) complex function.  The result of one function is passed into the next, and so on, until the final result, which is the result of the whole, is achieved.  
   
 - Why might we want to write an application using pure functions instead of impure functions?  
   
-Pure functions are predictible and easy to test, while impure functions can be unpredictible and have unexpected side effects. Impure functions also are harder to test because state may have been changed outside of the context of the function.  
+Pure functions are predictible and easy to test, while impure functions can be unpredictible and have unexpected side effects. Impure functions also are harder to test because state may have been changed outside of the context of the function.  Pure functions, with no side effects, can be run in parallel without the concern of creating race conditions that affect outside values.
   
 - Why might we want mutable state (OOP) in our application? Why might we want immutable state (FP)?  
   - This question is open-ended, don't focus on finding the "right" answer  
-    Having immutable state (FP) will allow us to more easily run applications in parallel, and startup and stop services without having to retrieve or store a particular state. Mutable state is useful, though more difficult to manage, in cases where customization or "distinct identity" are used. Rather than create new instances of an object everytime a change is made, keeping the same object and modifying the attributes may be more efficient.  
+    Having immutable state (FP) will allow us to more easily run applications in parallel.  Starting up and stopping services becomes easier when we dont have to retrieve or store a particular state that is shared. 
+    Mutable state is useful, though more difficult to manage, in cases where customization or "distinct identity" is used. Rather than create new instances of an object everytime a change is made (like we do in FP), keeping the same object and modifying the attributes may be more efficient.  
+    
 - What are some examples of side effects?  
   
-Some examples of side effects are: outputting to screen or filesystem (I/O) , modifying a mutable variable or data structure, throwing exceptions or errors.  
+Some examples of side effects are: outputting to screen or filesystem (I/O operations), modifying a mutable variable or data structure, throwing exceptions or errors.  
   
 - What is a Lambda?  
   
-A Lambda (or lambda function, lambda expression, anonymous function, or closure) is a nameless function written inline. Its an expression which can be used in place of a variable/value.  
+A Lambda (or lambda function, lambda expression, anonymous function, or closure) is a nameless function written inline. Its an expression which can be used in place of a variable/value.  Its useful in writing code in place and improves readiblity of code, and decreases the need to track down functions to understand what a program is doing.
   
 - How can we write Lambdas in Scala?  
   
@@ -229,15 +231,16 @@ Two paraemters (w/o type inference): val myName: (String, String) => String = (f
   
 - What does map do?  
   
-Map takes in an iterable data structure and a function (this can also be a lambda/anonymous function), and returns an iterable data structure made up of the result of applying the function to each element in the original. To forgo the returned collection, we can use foreach for situations where we need to create side effects but dont care about the return value.  
+The Map method takes an iterable data structure and a callback function, and returns an iterable made up of the result of applying the callback to each element. An alternative to map is foreach, that works similarly, can be used to cause side effects, without a returned iterable (returns Unit instead).  
+
   
 - What does filter do?  
   
-Filter takes in an iterable and a function that evaluates each element in the collection and returns a boolean. It returns only the elements from the original collection that return a true value.  
+Filter takes in an iterable ds and a callback function that evaluates each element in the collection and returns a boolean. It returns only the elements from the original collection that evaluate to **true**.  
   
 - What does reduce do?  
   
-Reduce takes in an iterable and a function that takes 2 parameters and applies the function to the pair, it then takes that output and uses it as one of the parameters for the next iteration, and using the next element of the original iterable as the other. It continues this until it goes through each element of the collection.  
+Reduce takes in an iterable and a callback function that takes 2 parameters and applies the function to the pair.  It then takes that value and uses it as one of the parameters for the next iteration.  The other parameter comes from the iterable we passed in.  Its next element is the other parameter. It continues this until it goes through each element of the collection.  
   
 - What does it mean that a function returns Unit in Scala?  
   
@@ -249,9 +252,7 @@ Recursion is the defining of something in terms of itself. In programming recurs
   
 - What do we need to include in any effective recursive function?  
   
-To prevent a recursive function from calling itself infinitely there needs to  
- be a base case (smallest division of the problem). The base case is the  
-  point at which the problem can no longer be divided and whose solution can be returned directly.  
+To prevent a recursive function from calling itself infinitely there needs to be a base case (smallest division of the problem). The base case is the point at which the problem can no longer be divided and whose solution can be returned directly.  
   
 - What is parameterized typing?  
   
@@ -262,11 +263,7 @@ Parameterized typing is where we say Array[Int] to make an int array or Array[St
   
 - What is the Stack? What is stored on the Stack?  
   
-The Stack is an allocated portion of memory that is created for each thread of a program.  During runtime, functions
- are added to the Stack in a LIFO (Last In First Out) order.  Each time a new function is called from within a
-  function, a new stack frame is pushed on to the stack.  In addition, local variables (available only within the
-   stack, aand references to objects that are being stored in the heap (which are available too all threads/stacks
-   .  When there are no more functions being called, the last function in is "popped" off the stack and it is
+The Stack is an allocated portion of memory that is created for each thread of a program.  During runtime, functions are added to the Stack in a LIFO (Last In First Out) order.  Each time a new function is called from within a function, a new stack frame is pushed on to the stack.  In addition, local variables (available only within the stack, aand references to objects that are being stored in the heap (which are available too all threads/stacks.  When there are no more functions being called, the last function in is "popped" off the stack and it is
     evaluated, and its value returned (if any).  Then the stack frame will be discarded, its local variables and
      references discarded and the space made available for future stack frames. If a thread tries to add a new stack
       frame, but there is no space, a StackOverFlowError error will be thrown.
@@ -303,12 +300,17 @@ When there are no longer references to an object from any of the  it is marked f
 
 Methods in the stack contain reference variables that point  to objects in the heap.
 
-- Know the basics of the following Scala Collections: (mutable? indexed? when to use it?)  
-  - List: a list is an immutable, collection of elements of the same type that has a head and tail.  The head is the first item, the tail is everything else.  They are very fast for   
-  - Set  
-  - Map  
-  - ArrayBuffer  
-  - Vector  
+- Know the basics of the following Scala Collections: (mutable? indexed? when to use it?)  Performance table: https://www.lihaoyi.com/post/BenchmarkingScalaCollections.html#lists-vs-vectors
+
+  - List: a list is a singly linked list that is an immutable, collection of elements of the same type that preserves order and can contain duplicates.  It is unindexed and access to the head is very fast. The head is the first item, the tail is everything else.   
+  
+  - Set: have no duplicates, generally do not preserve order and are not indexed, but they are iterable.  Some have guaranteed order, some do not.  Can be thought of as a map without values.
+  
+  - Map - Are hashtables under the hood, key-value pairs that provide constant time lookups.  Mutable and immutable versions are available.  
+  
+  - ArrayBuffer  - Index, sequential, mutable, appending elements is fast.  Can contain duplicates.
+  
+  - Vector - indexed, immutable, sequences, effectively Constant time
     
 - What is a generic?  
   - the phrase "compile time type safety" is useful in this answer  
@@ -326,32 +328,89 @@ val myName: Option[String] = Some("Danny Lee")
 
 - What are Exceptions?
 
+  In programming, exceptions are unexpected behavior or abnormal conditions in a program.  In Scala, when this happen an Exception object will be thrown and the programs execution is interrupted until the exception is caught and handled.  Sometimes this is due to using the Scala language improperly, othertimes we want to throw Exceptions intentionally when something exceptional happens.
   
 - What are Errors?
 
+   Errors are thrown when more serious problems are indicated.  Errors can't or generally shouldn't be caught and/or recovered from.
   
 - What is Throwable?
 
+Throwable is the superclass to Exceptions and Errors, and only it and its subclasses can be thrown by the JVM or by the Java throw statement.  It also takes a snapshot of the execution stack of its thread and can contain other information to investigate what caused the program to abort execution.
   
 - How would we write code that handles a thrown Exception?
-
+```
+  try {
+    // some code here
+  } catch {
+    case red: RedException => handleRedException(red)
+    case e: BlueException => System.err.println(e.getMessage)
+    case _: Throwable => println("Other type of exception") 
+  } finally {
+    // code to clean up before exiting
+  }
+```
+  
   
 - How do we write code to throw an Exception?  
   
+  try {
+    throw new Exception("Whee!")
+  } catch {
+    case _: Throwable => println("Thrown exception")
+  }
   
 ---  
 # Day 5  
   
 - What does the src folder contain in an sbt project?  
+
+    The /src/main/scala holds our classes, traits, objects and packages.
+    The /src/main/java holds our Java classes
+    The /src/main/resources folder holds configuration files
+    The src/test folder holds tests with a similar structure to src/main
+
 - the target folder?  
+
+    The src/target folder holds compiled version of Scala files.
+    
 - What is a Trait?  
-- What is a case class?  
+
+    Traits share methods and fields between classes, and are similar to Java's interfaces.  They can have abstract (undefined) methods and concrete (defined) methods.  Traits can be extended by a class and the methods implemented.  To add multiple traits we can use:
+  ```
+  trait Tailwagger {}
+  
+  class Dog extends Tailwagger with Runner with Speaker {
+  }
+  
+  or 
+  
+  val d = new Dog("Snoop") with Tailwagger with Runner
+  // methods in traits must be defined!
+  ```
+    
+    Concrete (defined) methods can be overridden using the `override` keyword.
+    
+
+- What is a case class?
+
+  A case class is like a class but with some extra built in functionality.  The export their constructor parameters and allow the class constructor to be pattern matched. One feature is the .apply syntactic sugar that enables instantiation without using the keyword `new`.  Also, the case classes constrcutor parameters are promoted to members and are accessible as `caseClass.memberName`.  
+  
+  Also, members are compared by values rather than identity.
+
 - What methods get generated when we declare a case class?  
+    apply - no need for `new` keyword
+    unapply - useful for match expressions
+    accessor methods for each constructor parameter
+    copy - clone object and change a field/member
+    equals - for comparing instances
+    hashCode - for use in collections
+    toString - Creates a string with the identity
+
+
 - What does the apply method do?  
 
-The apply method 
-
-The apply method is syntactic sugar 
+The apply method is syntactic sugar for creating new object instances without the new keyword.  It lets us use function notation instead of instantiating a new object with the New keyword.
 
 
 - What is a Thread?  
