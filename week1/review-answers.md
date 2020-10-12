@@ -86,8 +86,8 @@ The integer types available in Scala are:
   
 The decimal types available in Scala are:  
   
-- Double (32 bits) (IEEE 754 single-precision float) _default_  
-- Float (64 bits) (IEEE 754 double-precision float)  
+- Float (32 bits) (IEEE 754 single-precision float) 
+- Double (64 bits) (IEEE 754 double-precision float)  _default_  
 - BigDecimal  
   
 - What is the size of an Int? a Double? (the default integer and decimal types)  
