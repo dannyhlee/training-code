@@ -49,7 +49,8 @@ The .class files are created by the javac Java compiler and contains Java byteco
   
 - How does Scala relate to Java?  
   
-Scala is compiled into Java bytecode, the low-level language understood and executed on the JVM. Scala provides "language interoperability" with Java, meaning code libraries can be shared. Scala is Object Oriented like Java, but is built for functional programming rather than Object Oriented programming.  
+Scala compiles into Java bytecode, the low-level language understood and executed on the JVM. Scala provides "language
+ interoperability" with Java, meaning code libraries can be shared. Scala is Object Oriented like Java, but is built for functional programming rather than Object Oriented programming.  
   
 - What is sbt (high level)?  
   
@@ -57,7 +58,8 @@ sbt is a software tool for building Scala and Java projects. It helps organize a
   
 - How does Scala relate to the JRE and JVM?  
   
-Scala programs are translated into Java bytecode which is loaded into the JRE along with the classes and libraries it requires. The JVM is installed along witht he JRE and the JVM interprets the bytecode. The JVM does the heavy lifting when it comes with interacting with different operating systems and computers. A useful illustration is available at https://getkt.com/blog/difference-between-jdk-jre-and-jvm-explained-java/  
+Scala programs translates into Java bytecode which is loaded into the JRE along with the classes and libraries it
+ requires. The JVM is installed along witht he JRE and the JVM interprets the bytecode. The JVM does the heavy lifting when it comes with interacting with different operating systems and computers. A useful illustration is available at https://getkt.com/blog/difference-between-jdk-jre-and-jvm-explained-java/  
   
 ---  
 # Day 2  
@@ -260,21 +262,47 @@ Parameterized typing is where we say Array[Int] to make an int array or Array[St
   
 - What is the Stack? What is stored on the Stack?  
   
-The Stack is an allocated portion of memory that is created for each thread of a program.  During runtime, functions are added to the Stack in a LIFO (Last In First Out) order.  Along with the functions, local variables are stored in the stack and references to objects that are being stored in the heap.  Everytime a function is called, it is pushed onto the stack.  It will then be popped off the stack, evaluated and a result is returned.  After the function completes execution, the memory space is cleaned up, the local variables are discarded and it pops off the next function in the stack.  
+The Stack is an allocated portion of memory that is created for each thread of a program.  During runtime, functions
+ are added to the Stack in a LIFO (Last In First Out) order.  Each time a new function is called from within a
+  function, a new stack frame is pushed on to the stack.  In addition, local variables (available only within the
+   stack, aand references to objects that are being stored in the heap (which are available too all threads/stacks
+   .  When there are no more functions being called, the last function in is "popped" off the stack and it is
+    evaluated, and its value returned (if any).  Then the stack frame will be discarded, its local variables and
+     references discarded and the space made available for future stack frames. If a thread tries to add a new stack
+      frame, but there is no space, a StackOverFlowError error will be thrown.
   
 - What is the Heap? What is stored on the Heap?  
   
-In the Java memory model, the heap is the area of memory where Objects are stored.  It is not organized and objects in memory are referenced from the stack by references stored in each stack frame.  The objects can be accessed by different threads and so there can be more than one thread pointing to the same objects in memory.  Once all references to an object are removed (by execution) the object is ready for garbage collection.  
+In the Java memory model, the heap is the area of memory where Objects are stored.  It is not organized and objects
+ in memory are referenced from the stack by references stored in each stack frame.  The objects can be accessed by
+  different threads and so there can be more than one thread pointing to the same objects in memory.  Once all
+   references to an object are removed (by execution) the object is ready for garbage collection.  If there's not
+    enough space to allocate an object and the garbage collector cannot make space, and the heap cannot be expanded
+    , an OutOfMemoryError will be thrown.
   
 - What is garbage collection?  
   
-In the Java memory model, Garbage collection is an automatic process in which the JVM will mark objects stored in the heap that have no references to them.  Once they are marked for deletion the JVM continues to check other objects in the heap.  Once it has completed its scan it will remove the objects from memory.  
+In the Java memory model, Garbage collection is an automatic process in which the JVM's GC (Garbage collector) will mark
+ objects stored in the heap that have no references to them.  The GC will scan all objects to see if they are "live
+ " or unreferenced.  After scanning all objects (which can be very time-consuming depending on how many objects are
+  in the heap), the GC will delete the marked objects.  GC can also compact the remaining referenced ("live") objects
+   to move them closer together to make memory allocation easier and faster.  JVM Generations provides a way to
+    prioritize stored objects into Young Generation, Old Generation and Permenant generations.  New objects go in the
+     YG, YG objects that survive GC may be moved to the OG.  When YG is cleaned up it is a minor garbage colelction
+     .  When the OG is cleaned up it is a major garbage collection.  These events are both "Stop the world" events
+     , meaning that application threads are put on hold until they finish.  The PG contains data that is needed by
+      JVM and will be populated at runtime.  Java SE library classes and methods are stored here.  They may be
+       removed if there is a need for space and they are not used by the program.  
   
 - When is an object on the Heap eligible for garbage collection?  
   
-When there are no longer references to them from any stack.  
+When there are no longer references to an object from any of the  it is marked for collection.    Garbage collection
+ occurs when the heap becomes full.
   
 - How do methods executing on the stack interact with objects on the heap?  
+
+Methods in the stack contain reference variables that point  to objects in the heap.
+
 - Know the basics of the following Scala Collections: (mutable? indexed? when to use it?)  
   - List: a list is an immutable, collection of elements of the same type that has a head and tail.  The head is the first item, the tail is everything else.  They are very fast for   
   - Set  
@@ -285,12 +313,29 @@ When there are no longer references to them from any stack.
 - What is a generic?  
   - the phrase "compile time type safety" is useful in this answer  
 - What is an Option?  
+
+An option is a collection of one item that consists of either Some or None.  Some contains the value, while None is equivalent to null, without throwing the Null Pointer Exception.  
+
 - What is found inside an empty Option?  
+
+An empty Option returns a None singleton, which is a reference that has no value.
+
 - How do we write an Option that contains a value?  
-- What are Exceptions?  
-- What are Errors?  
-- What is Throwable?  
-- How would we write code that handles a thrown Exception?  
+
+val myName: Option[String] = Some("Danny Lee")
+
+- What are Exceptions?
+
+  
+- What are Errors?
+
+  
+- What is Throwable?
+
+  
+- How would we write code that handles a thrown Exception?
+
+  
 - How do we write code to throw an Exception?  
   
   
@@ -303,9 +348,34 @@ When there are no longer references to them from any stack.
 - What is a case class?  
 - What methods get generated when we declare a case class?  
 - What does the apply method do?  
+
+The apply method 
+
+The apply method is syntactic sugar 
+
+
 - What is a Thread?  
+
+A thread is a single, independent path of instruction execution within a program.  When a program is started the **main thread** is started up.  New threads (java.lang.Thread) can be created and run concurrently (either async or sync).
+
 - What is a Future?  
+
+Futures provide a way to perform a computation asynchronously so they do not stop our program to wait for a result.  By using this nonblocking strategy we can make a request, try and perform an operation or run tasks in   parallel, and have a place to store the result, which is going to arrive in the future. A future is placeholder object that receives that result and it accepts a callback function to execute once the request has resolved.
+
 - In what situations might we want to use multiple threads? (just some)  
+
+Some examples of situations we would use this is we are getting or putting data to a database, file system (I/O events) or accessing network resources.  Running code in parallel or to different entities and awaiting their return, even though we are not sure when (or even if) they will return a value.  And we don't those values could return at different times. 
+
+
 - How can we do something with the result of a Future?  
-- How does a Future return a value or exception?  
+
+We use a callback function that is passed to Future on its creation that will be executed at completion of the Future.  Or, we can check on the future later in our code to determine if it has "successfully completed" or if an exception was thrown, that it has failed.  In the case of failure, 
+
+- How does a Future return a value or exception? 
+
+The future will return a Success or Failure.  A success will include the value of the computation.  A failure will return the exception that caused the failure.
+ 
 - How does the onComplete callback function work?
+
+The onComplete method (which returns Unit) lets us apply a provided callback function to the value (in case of Success/value) or exception (in case of Failure/exception).  This happens **eventually**. The callback function is of type `Try[T] => U` which is a monad simliar to `Option[T]` which holds a value (Some[T]) or (None).  Try[T] holds a value as Success[T] or an exception as Failure[T].  Another option is to use a `foreach` callback, which will only be called in case of Success. Care must be taken if applying multiple callbacks to a future, because the order of the execution is not guaranteed by the order they are written in code, nor are they affected by exceptions thrown by other callbacks.
+
