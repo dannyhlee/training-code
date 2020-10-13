@@ -3,12 +3,12 @@
   
 - What is Git?  
   
-Git is a version control system (VCS) for source code. It tracks changes to source code and provides support for branching and distributed development. Its efficient and very fast and scalable. Its also available on most operating systems, including linux, windows and macos.  
+Git is an actively maintained, open-source distributed version control system (VCS) that tracks source code changes originally developed by the Linus Torvalds, the creator of Linux.  Recently acquired by Microsoft, its the most popular and well-known source code management (SCM) tools. It tracks a running history of a code base and stores changes, prevents conflicts when merging multiple contributions in parallel branchs from multiple authors.  
   
 - What about GitHub? How are they related?  
   
 GitHub is a source code repository, along with storing the actual source code and Git histories, it provides extended
- functionality through desktop clients and plugins, search functions, issue tracking and an organized way to track and commit source code change suggestions (through pull requests). It also provides GitHub Actions which can be used to build continuous integration and continuous deployment by providing pipelines for testing, releasing and deploying software automatically. Other examples of source code repositories are GitLab and SourceForge.  
+ functionality through desktop clients and plugins, search functions, issue tracking and an organized way to track and commit source code change suggestions (through pull requests). It also provides GitHub Actions which can be used to build continuous integration and continuous deployment by providing pipelines for testing, releasing and deploying software automatically. .  
   
 - What command moves changes from GitHub to our local repo?  
   
@@ -29,16 +29,16 @@ git commit -m "some fancy commit message"
   
 - What is BASH?  
   
-BASH stands for Bourne Again SHell and it is a command line interface (CLI) for Unix/Linux based operating systems. It is a command processor that contains a set of low-level functions for interacting with the computer. It can also be extended by adding software to it. It provides scripting and scheduling functionality to automate individual and sets of commands.  
+BASH (or Bourne Again Shell) is a command line interface (or CLI) originally built for the for Unix/Linux based operating systems, but now available on macOs and windows computers.  Bash has scripting functionality and improved upon the sh CLI by adding command line editing, unlimited command history, job control and aliases and shell functions.
   
 - What does the PATH environment variable do?  
   
-The PATH environment variable on Windows and Unix/Linux operating systems is a list of directories where executable files (commands) are located. When the user types a command and hits enter, the operating system will check each of the directories in the PATH environment list and see if that entered command resides in any of them. The PATH environment can be edited to add new commands or remove deleted/deprecated commands. On many systems it is necessary to reboot or reset the computer after altering a PATH to allow the system to place the new PATH in memory.  
+The PATH environment variable on Windows and Unix/Linux operating systems is a list of directories that containg commands. When the user enters a command the OS checks this list of directories for the entered command. If its found, the cmd is executed.  The PATH environment can be edited to add new commands or remove deleted/deprecated commands. After editing its important to refresh the environment so the new values can be used.
   
 - What is the JDK and what does it let us do?  
   
-The JDK (or Java Development Kit) allows us to develop Java software. It contains the JRE, the java interpreter, the javac compiler, an archiver (jar) and a documentation generator (javadoc) along with other tools and libraries that are necessary to create Java applications. The JDK will convert our programs into bytecode format that the JRE can run.  
-  
+The JDK (or Java Development Kit) is a collection software development tools developed by Oracle such as compilers (javac), disassemblers (javap), debugger (jdb), archiver (jar) and a bunch of other tools for programming.  It also contains the JRE, which contains an JVM and libraries.  There is a free and open source JDK named OpenJDK.
+
 - What is the JRE and what does it let us do?  
   
 The Java Runtime Environment (or JRE) runs on top of the computer operating system and provides class libraries and other resources Java apps need. It combines the compiled code created by the JDK with libraries to run the program. The JRE is made up of the ClassLoader, Bytecode verifier and Interpreter. A more complete list is available here: https://www.ibm.com/cloud/learn/jre  
@@ -54,7 +54,7 @@ Scala compiles into Java bytecode, the low-level language understood and execute
   
 - What is sbt (high level)?  
   
-sbt is a software tool for building Scala and Java projects. It helps organize and efficiently compile, test and deploy projects. It helps track libraries and dependencies as well as assist in debugging projects.  
+sbt is a software tool for building Scala and Java projects. It helps organize and efficiently compile, debug and deploy projects. It helps manage dependencies and tracks libraries.  
   
 - How does Scala relate to the JRE and JVM?  
   
@@ -70,7 +70,7 @@ Scala is statically typed. Every piece of data is an object, every object has a 
   
 - Do we need to declare type for our variables in Scala? always?  
   
-Scala provides type inference, which means that Scala will try and guess the type of the data your are assigning to your variable. We do not always have to declare the type of our variables.  
+Scala provides type inference, which means that Scala will try and guess the type of the data your are assigning to your variable. 
   
 - What are integer types in Scala?  
   
