@@ -319,6 +319,7 @@ Methods in the stack contain reference variables that point  to objects in the h
     
 #### What is a generic?  
   - the phrase "compile time type safety" is useful in this answer  
+  Generics is the same as templating. Essentially you can write a function or object that treats any class you give it the exact same way. For example, List[T]. It doesn't matter which data type or class you give it, the List just knows that it needs to keep track of some number of some class. (Rheomyr)
   
   
 #### What is an Option?  
