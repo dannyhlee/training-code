@@ -518,29 +518,3 @@ var retVal = for{ var x <- List
 yield x
 
 ---
-
-# Week 2
-
-## Day 2
-
-#### What are the benefits of SQL vs NoSQL?
-
-Scaling: NoSql scales out.  SQL scales up. If you need more quickly, NOSQL is the way to go.
-
-Structure: SQL is good for highly structured data.  Complex queries and reports and ACID compliance.  Don't anticipates lot of changes and growth.  High transaction rate, because SQL is more stable and has better data integrity.
-
-Speed: When data consistency and 100%d data integrity is not as import, NoSQL adapts quickly to changes in structure, with a highly flexible schema design.
-
-Data Types: Lots of data types, and lkots of data is stored easily in NoSQL. No need to devise structures and strategies to work with data.
-
-You can also use both.
-
-#### What is standalone mode for a database?
-
-Mostly used for testing and development.  Another option is a **Single node replica set**, which has additional meta information (oplog).  MongoDB in production was designed with a replica set deployment in mind, for:
-
-- High availability in the face of node failures
-- Rolling maintenance/upgrades with no downtime
-- Possibility to scale-out reads
-- Possibility to have a replica of data in a special-purpose node that is not part of the high availability nodes
-
