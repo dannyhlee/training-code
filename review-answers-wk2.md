@@ -181,5 +181,10 @@ Basically Available
 Soft state
 Eventual consistency
 
-
-
+#### What is a SQL dialect?
+#### What are DML, DDL, DQL?
+#### What does SELECT do?
+#### FROM?
+#### WHERE?
+#### What is a primary key?
+#### What is a foreign key?
