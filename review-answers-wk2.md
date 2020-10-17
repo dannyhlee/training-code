@@ -134,9 +134,25 @@ db.studentdata.find({}, { _id: 0 }) })
 
 #### What is multiplicity? Examples of 1-to-1, 1-to-N, N-to-N?
 
+With the realm of database system and data modelling, specifically UML,  the multiplicity attribute of a relationship specifics the cardinality (or number of instances) of an entityType to instances of another entityType.  Some multiplicities are:
+- 1 to 1 ( A user to their configuration file)
+- 1 to N (or many) (a celebrity to their fans)
+- Many to Many (students and courses)
+
 #### What is cardinality?
+
+Is the measure of the number of elements in a set, basically how many elements of a set.  Cardinalities are a term used in ER models (Entity relationship model) to relate the minimum and maximum cardinality between two related entities.  Some ratios are:
+- m:n - many to many
+- m:1 - many to one
+- 1:n - one to many
+- 1:1 - one to one
+
 #### What are some advantages of handling document relationships by embedding documents?
+
+Some advantages of embedding related documents within one another is that 
+
 #### Disadvantages of the same?
+
 #### What about handling document relationships using references -- advantages and disadvantages?
 #### What is an Index?
 #### What advantages does creating an Index give us? Disadvantages?
@@ -159,14 +175,23 @@ It means that when we have a network problem, we must give up either consistency
 
 #### What does it mean that an operation or transaction on a data store is atomic?
 
-#### In Mongo, are operations on embedded documents atomic? What about operations on referenced documents?
+#### In Mongo, are operations on embedded documents atomic? 
+
+#### What about operations on referenced documents?
+
+
+
 #### What does RDBMS stand for?
 
 Relational DataBase Management System.
 
 #### What about SQL?
 
+Structured Query Language
+
 #### Do SQL databases have embedded records like mongo has embedded documents?
+
+
 
 #### Can we freely store any data we like in an RDBMS table the same way we store any data in a mongo collection?
 
@@ -181,10 +206,17 @@ Basically Available
 Soft state
 Eventual consistency
 
+
 #### What is a SQL dialect?
+
 #### What are DML, DDL, DQL?
+
 #### What does SELECT do?
-#### FROM?
-#### WHERE?
-#### What is a primary key?
-#### What is a foreign key?
+    
+####   FROM?
+    
+####   WHERE?
+    
+####  What is a primary key?
+    
+####   What is a foreign key?
