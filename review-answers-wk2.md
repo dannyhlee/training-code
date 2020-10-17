@@ -191,7 +191,7 @@ Structured Query Language
 
 #### Do SQL databases have embedded records like mongo has embedded documents?
 
-
+Not usually, in SQL database the standard is towards a normalized form which breaks out related data into separate tables and links them with a foreign key.  
 
 #### Can we freely store any data we like in an RDBMS table the same way we store any data in a mongo collection?
 
@@ -206,17 +206,32 @@ Basically Available
 Soft state
 Eventual consistency
 
-
 #### What is a SQL dialect?
+
+SQL Dialects are sub-groupings of SQL commands into groups according to their function.
 
 #### What are DML, DDL, DQL?
 
+Data Manipulation Language (Insert)
+Data Definition Language (Create)
+Data Query Language (Select)
+
 #### What does SELECT do?
+
+Select is used to choose the table that we are working on in a RDBMS.  Once we select, the query will refer to that table when doing its operations
     
 ####   FROM?
+
+From is use jointly with Select to point to the specific table in our database.
     
 ####   WHERE?
     
+Where is a filtering statement that precedes a predicate that will retrieve records/rows that return true for the predicate.
+
 ####  What is a primary key?
     
+ A primary key is a unique identifier in our database to identify individual records or rows in our table.
+ 
 ####   What is a foreign key?
+
+A foreign key is a column in a table that refers to the primary key of another table in the database.
