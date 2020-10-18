@@ -149,19 +149,95 @@ Is the measure of the number of elements in a set, basically how many elements o
 
 #### What are some advantages of handling document relationships by embedding documents?
 
-Some advantages of embedding related documents within one another is that 
+Having all the related data in one place and available through one query can be advantageous.  
+
+Some advantages of embedding related documents within one another is that reduce the need for performing joins on normalized data.  Normalization reduces redundancy, which facilitates updates, but when we need to read data it means pulling data from different parts of the hard drive.  In reading  a row of data 99% of the time is taken to seek to the location.  Reading data adjacent to the location is fast.  
+
+So, embedding documents provides locality, so once the document is located on the disk, reading all of its data is a fast operation because the data is adjacent to one another.  
+
+Another advantage of embedding is Atomicity and Isolation in writing data.  In relational databases updates are done as transactions which are guaranteed Atomicity.  MongoDB is designed without multi-document transactions (although this functionality has been added in MongoDB 4.0).  
+
 
 #### Disadvantages of the same?
 
+The flip side of the coin is having all the data in one document, may mean you have too much data.  So, our queries are returning a lot of data that isn't necessary all the time. 
+
+There is a 16mb limit to the size of documents, larger documents use more ram and disk space.  Ram is a critical resource and you have relationships of one-to-many, wher ethe many can be of very high or unpredictable arity can mean that "viral" requests for articles or photos can consume too many resources.
+
+Another example is an article with 1000 comments, you might not want to query all the comments, just a portion of them, before asking for more if the client requests it. 
+
+A lot of data will come pre-joined that dont need to be joined and could cause problems in high-arity relationships.
+
 #### What about handling document relationships using references -- advantages and disadvantages?
+
+Having references to related data is advantageous in that it allows a strategic structure to minimize the duplication of data.  This comes in handy when all data is not needed all the time.  Less requested data can be set in a separate document or collection. 
+
+It helps with document size management, reducing the size of individual documents.  Reduces the size of requests, although it increases the number of requests.
+
+A disadvantage is that updates are not atomic and although transactions have been introduced, by default we can't update all documents and related references atomically which can lead to data inconsistency.
+
 #### What is an Index?
+
+In MongoDb an index is a data structure that stores a part of a collections data set in an easy to traverse form.  There are different kinds of indexes for different types of data:  
+- Single field - _id field is one.  Ascending or descending sorted.
+- Compound index - Indexes on multiple fields.  Sorting first by one then the other.
+- Multikey indexes - index content in arrays, entries are made for each element of the array.
+- Geospatial index - for geospatial coordinate data
+- Text indexes - text indexes for searching string content.
+- Hashed indexes - for hash based sharding.  
+
+It's like an index in a book and allows us to more quickly search through a collection for the document(s) we are looking for.  MongoDB indexes the _id field automatically, but we can other indexes on document fields.  
+
 #### What advantages does creating an Index give us? Disadvantages?
+
+Indexes speed up queries for that field, but slows down updates to the document, because changes must also be marked in the index.
+
+Without an index MongoDB does a collection scan and scans every document in  a collection to select query-matching documents.
+
+
 #### What is CRUD?
+
+CRUD is an acronym that stands for:
+- Create - creating new data
+- Read/Retrieve - reading data in the db
+- Update - updating data
+- Delete - deleting records
+
+The term is used to generalize database operations and is also used very often with APIs (especially RESTful ones).  
+
 #### Some example CRUD methods for Mongo? (The Scala methods mostly match mongo shell syntax)
+
+- Create - insertOne(), insertMany()
+- Read - find()
+- Update - UpdateOne(), UpdateMany(), replaceOne()
+- Delete - deleteOne(), deleteMany()
+
 #### What is a distributed application? A distributed data store?
+
+A distributed application operates on more than one physical or virtual machine at the same time, with a network connection between them.  An example is an application with has a client front end that requests data from a server where data is stored.  It could include multiple clients and/or multiple servers.
+
+A distributed data store is infrastructure that can split data across multiple physical servers and across multiple data centers.  It typically takes the form of a cluster of storage units, with a mechanism for data synchronization and coordination between cluster nodes.  (Ex: Amazon S3, MS Azure)
+
+DDS provide redundancy and scalability, by providing the ability to spin up new instances if one goes down or if more capacity is required.
+
 #### What is High Availability? How is it achieved in Mongo?
+
+High availability is a characteristic or property of a system to almost always be available and avoiding downtime.   By having high fault tolerance the system is able to experience faults and continue functioning (albeit with degraded functionality).  One way to provide redundancy is through failover behaviors such as MongoDB's replica sets.  A replica set is at least 3 instances of a database running in a distributed manner.  If the primary fails, a replica will take over and with services like Amazon S3 new instances can be started up.
+
 #### What is Scalability? How is it achieved in Mongo?
+
+Scalability is a characteristic of a system to be able to grow to meet growing amount of work (demand).  In order to meet growing demand MongDB uses sharding to balance the load on a database by taking a large database and breaking it into a number of smaller databases running across multiple servers.  
+
 #### Explain replica sets and sharding
+
+A replica set is an identical data set, copied over to multiple instances.  It provides system redundancy and high availability.  By having multiple copies on multiple servers, possibly in multiple locations, replica sets provide fault-tolerance.  They can also add performance value because clients reading data from servers can use different servers (closer to them) reducing demand to any single server instance.  When changes are made to the Primary, the changes to the oplog are propagated through the system so that the secondaries can perform the same operations.  
+
+Sharding is a method of distributing data across multiple machines.  When load is too much for one server, there are two ways to address the load--Veritical and Horizontal scaling.  Horizontal scaling involved improves the single server through hardware improvements.  Horizontal scaling is done by adding additional servers.   
+
+A sharded cluster each contains a subset of the sharded data.  Each shard can be deployed as a replica set.  The mongos acts as a query router, providing an interface between clients and the cluster.  Config servers store meta data and configuration settings.
+
+Sharding distributes read and write requests, distributes data across shards, and provides high availability.  
+
 #### What is the CAP Theorem?
 
 The CAP theorem states that a distributed data store cannot possible provide more than two out of the three guarantees:
