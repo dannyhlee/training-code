@@ -3,7 +3,7 @@
 
 #### How do we specify dependencies using sbt?
 
-Project dependencies can be specified by concatenating them to the `libraryDependencies` value member of the Keys object in sbt.  This can be done in the file build.sbt, located in our project's root directory.  The format is:
+Project dependencies can be specified by adding them to `libraryDependencies`, which is a value (member) of the Keys object in sbt.  We do this in ./build.sbt. 
 ```
 libraryDependencies += organization %% name % version
 libraryDependencies += groupID % artifactID % revision
@@ -18,9 +18,19 @@ libraryDependencies += "org.scala-stm" %% "scala-stm" % "0.8"
 ```
 The single percent  (%) symbol is a method used to build dependencies (technically, [creating ModuleID objects from strings](https://www.scala-sbt.org/release/docs/Library-Dependencies.html)) . Using double percent (%%) after the groupID inject your project's Scala version and appending it to the artifact name. This is useful in the case your Scala version is changed, regardless, sbt will retrieve the right version.  
 
+Multiple dependencies can be added using a Seq() and ++= notation:
+```
+libraryDependencies ++= Seq(
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.9.0",
+  "io.spray" %%  "spray-json" % "1.3.5",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.11.3",
+  "com.fasterxml.jackson.module" % "jackson-module-scala" % "2.0.2"
+)
+```
+
 #### Why do we use databases instead of just writing to file?
 
-Database add structural organization to data in the form of entities and relationships.  We are able use these to create complex queries and more efficiently store, access and backup data.  We improve data integrity by reducing updating errors.  We provide security by enacting access permissions on data and only showing what we want through views.  We provide a controlled method of concurrent access and crash recovery.
+Databases give us structure in the form of entities and relationships.  These can be used to more efficiently store and access data, queries to find specific data in a database can be more complex and specific than reading from a text file.  By adding transactional rules for the update of data we reduce the possibility of updating errors, corrupted data by partial writes and multiple users accessing the data at the same time and overwriting one another's changes.  Security is improved with access controls and only publically showing what we want through views.  We provide a controlled method of concurrent access and crash recovery.
 
 #### What is a port number?
 
@@ -36,11 +46,11 @@ A database is an organized collection of structured data stored electronically. 
 
 #### What is a collection?
 
-In MongoDB, a collection is part of a database, and there can be many collections in a single database.  A collection is made up of documents, and is analogous to RDBMS tables.  They are entities that organize documents into some kind of logical collection.  Though there are aren't enforced rules (or schema) that dictates how these collections are organized, logic dictates that they collect documents in some sort of organized fashion.
+In MongoDB, a collection is made up of documents, and is analogous to RDBMS tables.  There can be many collections in a MongoDB database.  Collections are entities that organize documents into some kind of logical collection.  Though Mongo doesnt really enforce rules that dictates how these collections are organized (aka Schema), it makes sense to collect documents in some sort of organized fashion.
 
 #### What is a document?
 
-A document is container which stores data in key-value pairs.  The format they use, BSON, is similar to JSON, but instead binary and includes additional types that aren't available in JSON.  These fields can hold all sorts of data including simple types (int, char, str), data structures (lists, arrays, sets) and embedded sub-documents.  This style of embedding documents within documents is generally referred to as "denormalized".
+A document is container which stores data in key-value pair in a format called BSON, which is similar to JSON.  Instead of text BSON is a binary file and includes additional types that aren't available in JSON.  These fields can hold all sorts of data including simple types (int, char, str), data structures (lists, arrays, sets) and embedded sub-documents.  This style of embedding documents within documents is generally referred to as "denormalized".  A document has a max size of 16mb.
 
 #### What rules does Mongo enforce about the structure of documents inside a collection?
 
