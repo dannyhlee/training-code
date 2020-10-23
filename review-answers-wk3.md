@@ -81,23 +81,43 @@ Network transfer would take the longest in terms of I/O, because computer memory
 #### Walk thorugh a MapReduce job that counts words in the sentence : "the quick brown fox jumped over the lazy dog" (6)
 
 
+
 #### How does this work for 2 input blocks (so 2 Map tasks) and 1 reduce task? What if we had 2 Reduce tasks?
 
 
 ## Day 3
 
-
 #### What was the "Hadoop Explosion"?
+
+
 
 #### What about CDH?
 
+The Cloudera Distribution Hadoop is an Apache Hadoop distribution provided by Cloudera Inc.  Its a complete, tested and widely deployed distribution, 100% open source and offers batch processing, interactive SQL and interactive search as well as enterprise-grade continuous availability.  
+
+Parts of CDH:
+- Apache Hadoop: reliable, scalable distributed storage and computing
+- Apache Accumulo: A secure, distributed data store to serve performance-intensive Big Data applications
+- Apache Flume: For collection and aggregating log and event data and real-time streaming it into Hadoop.
+- Apache HBase: Scalable record and table storage with real-time read/write access
+(to be continued... https://www.cloudera.com/products/open-source/apache-hadoop/key-cdh-components.html )
+
 #### What are some differences between hard disk space and RAM?
+
+
 
 #### What is a VM? (short)
 
+Virtual Machine.
+
 #### What is AWS? (short)
 
+Amazon Web Services
+
 #### What is/was Unix? Why is Ubuntu a Unix-like operating system?
+
+
+
 
 #### Know basic file manipulation and navigation commands in Unix:
 
@@ -125,4 +145,56 @@ history
 
 #### What is a package manager? what package manager do we have on Ubuntu?
 
+## Day 4
+
 #### What is ssh?
+
+Having secure communication over an insecure network.  Using a key-pair, where you have a public and private key.  We can access a remote machine as if we had a shell.
+
+#### Be able to explain the significance of Mapper[LongWritable, Text, Text, IntWritable] and Reducer[Text, IntWritable, Text, IntWritable]
+#### What needs to be true about the types contained in the above generics?
+#### What are the 3 Vs of big data?
+#### What are some examples of structured data? Unstructured data?
+#### What is a daemon?
+#### What is data locality and why is it important?
+
+Data locality in MapReduce/Hadoop is a strategy developed to overcome the drawback of cross-switch networking transfer of huge volumes of data.  The different categories of Data Locality in Hadoop are:
+- Data local data locality - data located in the same node as the mapper
+- Intra-Rack data locality - data is in a different node, but on the same rack
+- Inter-rack data locality - data is on a different node on a different rack
+
+#### How many blocks will a 200MB file be stored in in HDFS, if we assume default HDFS block size for Hadoop v2+?
+#### What is the default number of replications for each block?
+#### How are these replications typically distributed across the cluster? What is rack awareness?
+#### What is the job of the NameNode? What about the DataNode?
+#### How many NameNodes exist on a cluster?
+#### How are DataNodes fault tolerant?
+#### How does a Standby NameNode make the NameNode fault tolerant?
+#### What purpose does a Secondary NameNode serve?
+#### How might we scale a HDFS cluster past a few thousand machines?
+#### In a typical Hadoop cluster, what's the relationship between HDFS data nodes and YARN node managers?
+
+
+## Day 5
+
+When does the combine phase run, and where does each combine task run?
+
+Know the input and output of the shuffle + sort phase.
+
+What does the NodeManager do?
+
+What about the ResourceManager?
+
+Which responsibilities does the Scheduler have?
+What about the ApplicationsManager?
+What is an ApplicationMaster? How many of them are there per job?
+
+What is a Container in YARN?
+
+How do we interact with the distributed filesystem?
+
+What do the following commands do?
+
+hdfs dfs -get /user/adam/myfile ~
+hdfs dfs -put ~/coolfile /user/adam/
+
