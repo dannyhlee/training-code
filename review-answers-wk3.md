@@ -89,7 +89,7 @@ Network transfer would take the longest in terms of I/O, because computer memory
 
 #### What was the "Hadoop Explosion"?
 
-
+The Hadoop explosion was a flurry of innovation that followed the development of Hadoop.  Many specific tools were created to take advantage of map reduce.  The Hadoop framework for processing huge volumes of a wider variety of data created a new way to deal with the huge amounts of data being generated.  
 
 #### What about CDH?
 
@@ -104,7 +104,7 @@ Parts of CDH:
 
 #### What are some differences between hard disk space and RAM?
 
-
+RAM is short term memory, where things can be quickly stored and retrieved, however it is temporary and will be erased as soon as our computer is shut down.  Disk space takes longer to read and write to, but the storage is long-term and can persist even after a machine's power is turend off.
 
 #### What is a VM? (short)
 
@@ -121,21 +121,23 @@ Amazon Web Services
 
 #### Know basic file manipulation and navigation commands in Unix:
 
-ls -al
-cd
-pwd
-mkdir
-touch
-nano
-man
-less
-cat
-mv
-cp
-rm
+ls -al: list ALL files in the directory in LONG format.  This shows hidden files and directories, as well as permissions, user/group ownership, byte size, date of creation and name.
+cd: change directory
+pwd: print working directory.  It shows the directory you are currently in.
+mkdir: creates a directory
+touch: creates a 0-byte file.
+nano: a simple text editor
+man: man brings up manual pages for a given command
+less: reads content of a file and prints to screen in a paginated manner
+cat: prints content to a screen without pagination
+mv: move a file from one location to another, can also rename files and directories
+cp: copy a file from one location to another
+rm: removes a file from the filesystem.  -r to remove recursively.
 history
 
 #### What's the difference between an absolute and a relative path?
+
+
 
 #### How do permissions work in Unix?
 
