@@ -116,7 +116,9 @@ Amazon Web Services
 
 #### What is/was Unix? Why is Ubuntu a Unix-like operating system?
 
+Unix is an operating system developed by Bell Labs in the 70s.  Originally it was sold with a license that allowed its source code to be modified.  Later this was amended, but development continued in flavors like BSD and private companies had their own version of Unix variants (like SunOS/Solaris, HP-UX, AIX, Xenix.  
 
+Ubuntu is a unix-like operating system because its built on the Linux kernel and GNU OS and tools. Linux distributions were created to provide free and open source software in light of the UNIX licensing/copyright battles in the early 90s.
 
 
 #### Know basic file manipulation and navigation commands in Unix:
@@ -137,27 +139,89 @@ history
 
 #### What's the difference between an absolute and a relative path?
 
-
+An absolute (or full) path points to the same location in a file system, regardless of the current working directory.  A relative path takes into account the CWD and can change depending on what directory we are currently in.  A '.' references our current directory.  A '..' references a directory 1 level above (parent directory). 
 
 #### How do permissions work in Unix?
 
+Permissions are divided into read, write and execute permissions.  They are also separated by users and groups.  We can specify permissions for files and directories for owner/group/public.  
+
 #### What are users, what are groups?
+
+Users can be either individual people's accounts or they can be an account for an application to use.  Each recieves a UID.  Some user commands:
+```
+sudo useradd -m username
+sudo passwd username
+```
+Each user is part of one or more groups.  They can have additional permissions based on their groups.  User and group information is stored in /etc/passwd and /etc/groups.
 
 #### How does the chmod command change file permissions?
 
+We specify the permissions we want to give and the files/directories that we want to modify.  We can see the set permissions with ls -l.
+
+The way this shows up on the filesystem when we use ls is:
+```
+drwxr-xr-- = directory, r/w/x for owner, r/x for group and r only for public
+-r-xr-xr-- = file, r/x for owner and group, r only for public
+```
+Permissions can be set using the `chmod` command.  0 for no permissions, 4 for read, add 2 for write and 1 for execute.  For example:
+```
+rwx = 7
+rw = 6
+rx = 5
+
+rx for owner, group and public would be 555
+rwx for owner, and rx for group and public 755
+
+in binary:
+rwx r-x r-x would be 755 using the coding above and in binary = 111 101 101 
+```
+
 #### What is a package manager? what package manager do we have on Ubuntu?
+
+A package manager takes care of the installation, update and removal of applications.  The ubuntu package manager is apt (Advanced Packaging Tool). 
+
+- update: download package information for all configured sources, it shows package details and availability for installation.
+
+- upgrade: upgrades currently installed packages 
+
+- install, remove, purge, search, show, list
 
 ## Day 4
 
 #### What is ssh?
 
-Having secure communication over an insecure network.  Using a key-pair, where you have a public and private key.  We can access a remote machine as if we had a shell.
+SSH (secure shell) provides an encrypted connection over unsecured networks, by using pairs of cryptographic encryption.  Once logged in, transfers of data and commands can be done securely because all data transferred between SSH server and SSH client is encrypted.
 
 #### Be able to explain the significance of Mapper[LongWritable, Text, Text, IntWritable] and Reducer[Text, IntWritable, Text, IntWritable]
+
+**Mapper**: The 4-tuple [LongWritable, Text, Text, IntWritable] being passed into Mapper specifies the input key-value pair is of type [LongWritable, Text] and the output key-value type is [Text, IntWritable].  
+
+**Reducer**: The 4-tuple Reducer[Text, IntWritable, Text, IntWritable] being passed in represents the types of input and output of the key-value pair.  These are the same for input and output [Text, IntWriteable].
+
 #### What needs to be true about the types contained in the above generics?
+
+They must match outputs to inputs.  The output of mapper needs to match up to input of reducer, or if there is a combiner the output of mapper must line up with the input of combiner, and the output of combiner must line up with the input of the reducer.
+
 #### What are the 3 Vs of big data?
+
+Volume, velocity and variety.  
+
+Volume: Data in large volumes > 1TB
+Velocity: Data being generated rapidly (online/server logs)
+Variety: Data being in different formats with differing amounts of structure
+
 #### What are some examples of structured data? Unstructured data?
+
+Structured data: SQL database tables, mongo db?  clearly defined data types whose pattern makes them easily searchable.
+
+Semi-structured: XML, csv, email
+
+Unstructured data: formats like audio, video, social media posts, pdf.
+
 #### What is a daemon?
+
+Daemons are computer programs that run as a background process, often forked off and running detached from the invoking session.  They are often long-running and perform specific functions or system tasks.  In keeping with Unix/Linux philosophy of modularity, daemons are programs rather than parts of the kernal.  Many start at boot time and run as long as the system is running.
+
 #### What is data locality and why is it important?
 
 Data locality in MapReduce/Hadoop is a strategy developed to overcome the drawback of cross-switch networking transfer of huge volumes of data.  The different categories of Data Locality in Hadoop are:
@@ -166,37 +230,78 @@ Data locality in MapReduce/Hadoop is a strategy developed to overcome the drawba
 - Inter-rack data locality - data is on a different node on a different rack
 
 #### How many blocks will a 200MB file be stored in in HDFS, if we assume default HDFS block size for Hadoop v2+?
+
+Hadoop v2+ default block size is 128M MB so a 200 MB file will be stored on 2 blocks.
+
+block 1: 128 MB
+block 2: 72 MB
+
 #### What is the default number of replications for each block?
+
+The default number of replications is 3.  This is called the replication factor and is stored by the NameNode.  
+
+Blocksize and replication factor are configurable per file.
+
 #### How are these replications typically distributed across the cluster? What is rack awareness?
+
+The HDFS placement policy is to put one replica on one node in the local rack, another on a none in a different (remote rack) and the last on a different node, in the same remote rack.
+
 #### What is the job of the NameNode? What about the DataNode?
+
+NameNode: This is the master.  There is only one or very few per cluster.  The NN keeps the image (FSImage) of the DFS, it knows the names and directories, where to find the contents in the cluster but nothing about the data.  It records edits to the filesystem on the EditLog.  
+
+DataNode: This is the worker.  One per machine in a typical deployment.  The DN keeps actual data and communicates its status to NN (heartbeat) and a Blockreport (list of all blocks on the DN).  Doesnt know anything about the files.
+
 #### How many NameNodes exist on a cluster?
+
+One or few. There can be a secondary NN that backups NN metadata.  Secondary can't step in.  Standby NN can step in.
+
 #### How are DataNodes fault tolerant?
+
+DataNodes' fault tolerance is handled by the NN.  If a DN stops sending heartbeats to the NN, the NN will not make IO requests to them and if any of the blocks that were stored on the node fall below their replication factor, the NN will start a replication process for the data on the DN.
+
 #### How does a Standby NameNode make the NameNode fault tolerant?
+
+Prior to Hadoop 2, the NN was a single point of failure (SPOF) in an HDFS cluster.  The entire cluster would go down until the NameNode was restarted or brought up on another machine.  This affected availability in cases of machine failure, but also for maintenance and sw/hw upgrades.
+
+In a HA (high availability) cluster, 2 or more machines are configured as NameNodes.  One as Active, one as Standby.  The machines share a networked storage device where the Active node durably logs a record of edits, the Standby(s) continually monitor and update their own namespaces to match this log. 
+
+In case of failure, the Standby finishes all writes that are recorded on the shared drive, before a failover occurs.
+
+Standby nodes also receive blockreports and heartbeats to all Standbys.
+
 #### What purpose does a Secondary NameNode serve?
+
+The Secondary helps the primary NameNode to keep its **Fsimage** file and **Edits** log file up to date.  The Fsimage is like a save point in a video game, it has the file system status up to a certain point.  The Edits log file is a list of the changes made since then.  By applying the edits log file transactions to the Fsimage, we can get the current status of the filesystem.  This is what the Primary NameNode will do when it restarts.
+
+However, because many transactions could have occurred between restarts, this can cause problems with filesize of the Edits log and the time to apply all the changes.  The secondary steps in here, by occassionally taking a copy of the Fsimage, applying the edits and then sending it back to the Primary, along with refreshing the edits log to let the Namenode what updates it made.  This keeps the log size manageable and the Fsimage file better updated so restarts can be faster.
+
 #### How might we scale a HDFS cluster past a few thousand machines?
+
+To scale past a few tho
+
 #### In a typical Hadoop cluster, what's the relationship between HDFS data nodes and YARN node managers?
 
 
 ## Day 5
 
-When does the combine phase run, and where does each combine task run?
+#### When does the combine phase run, and where does each combine task run?
 
-Know the input and output of the shuffle + sort phase.
+#### Know the input and output of the shuffle + sort phase.
 
-What does the NodeManager do?
+#### What does the NodeManager do?
 
-What about the ResourceManager?
+#### What about the ResourceManager?
 
-Which responsibilities does the Scheduler have?
-What about the ApplicationsManager?
-What is an ApplicationMaster? How many of them are there per job?
+#### Which responsibilities does the Scheduler have?
+#### What about the ApplicationsManager?
+#### What is an ApplicationMaster? How many of them are there per job?
 
-What is a Container in YARN?
+#### What is a Container in YARN?
 
-How do we interact with the distributed filesystem?
+#### How do we interact with the distributed filesystem?
 
-What do the following commands do?
-
-hdfs dfs -get /user/adam/myfile ~
-hdfs dfs -put ~/coolfile /user/adam/
+#### What do the following commands do?
+- hdfs dfs -get /user/adam/myfile ~
+- hdfs dfs -put ~/coolfile /user/adam/
 
