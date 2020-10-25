@@ -93,14 +93,7 @@ The Hadoop explosion was a flurry of innovation that followed the development of
 
 #### What about CDH?
 
-The Cloudera Distribution Hadoop is an Apache Hadoop distribution provided by Cloudera Inc.  Its a complete, tested and widely deployed distribution, 100% open source and offers batch processing, interactive SQL and interactive search as well as enterprise-grade continuous availability.  
-
-Parts of CDH:
-- Apache Hadoop: reliable, scalable distributed storage and computing
-- Apache Accumulo: A secure, distributed data store to serve performance-intensive Big Data applications
-- Apache Flume: For collection and aggregating log and event data and real-time streaming it into Hadoop.
-- Apache HBase: Scalable record and table storage with real-time read/write access
-(to be continued... https://www.cloudera.com/products/open-source/apache-hadoop/key-cdh-components.html )
+CDH stands for Cloudera Distribution Hadoop is an Apache Hadoop distribution provided by Cloudera Inc.  Its a prepackaged, tested and complete distribution that is widely deployed.  It includes a GUI, batch processing, interactive SQL and search, and enterprise-grade continuous availability.  
 
 #### What are some differences between hard disk space and RAM?
 
@@ -123,18 +116,18 @@ Ubuntu is a unix-like operating system because its built on the Linux kernel and
 
 #### Know basic file manipulation and navigation commands in Unix:
 
-ls -al: list ALL files in the directory in LONG format.  This shows hidden files and directories, as well as permissions, user/group ownership, byte size, date of creation and name.
-cd: change directory
-pwd: print working directory.  It shows the directory you are currently in.
-mkdir: creates a directory
-touch: creates a 0-byte file.
-nano: a simple text editor
-man: man brings up manual pages for a given command
-less: reads content of a file and prints to screen in a paginated manner
-cat: prints content to a screen without pagination
-mv: move a file from one location to another, can also rename files and directories
-cp: copy a file from one location to another
-rm: removes a file from the filesystem.  -r to remove recursively.
+- vls -al: list ALL files in the directory in LONG format.  This shows hidden files and directories, as well as permissions, user/group ownership, byte size, date of creation and name.
+- cd: change directory
+- pwd: print working directory.  It shows the directory you are currently in.
+- mkdir: creates a directory
+- touch: creates a 0-byte file.
+- nano: a simple text editor
+- man: man brings up manual pages for a given command
+- less: reads content of a file and prints to screen in a paginated manner
+- cat: prints content to a screen without pagination
+- mv: move a file from one location to another, can also rename files and directories
+- cp: copy a file from one location to another
+- rm: removes a file from the filesystem.  -r to remove recursively.
 history
 
 #### What's the difference between an absolute and a relative path?
@@ -143,16 +136,20 @@ An absolute (or full) path points to the same location in a file system, regardl
 
 #### How do permissions work in Unix?
 
-Permissions are divided into read, write and execute permissions.  They are also separated by users and groups.  We can specify permissions for files and directories for owner/group/public.  
+Unix permissions are a way to control which users can read, write or execute files and directories.  These three access permissions are defined for three types of users: the owner, the group the owner belongs to and other users.  This results in 9 bits of information (3 types of access x 3 types of users), each of which can have 1 value (allowed or denied).
 
 #### What are users, what are groups?
 
-Users can be either individual people's accounts or they can be an account for an application to use.  Each recieves a UID.  Some user commands:
+Users can be individual user accounts, or an account for a program or system function that runs on the system.  Even though every user has a username, inside the computer each user has a UID.  Some system users are: root, daemon or sys, guest, ftp, lp, nobody.
+
+.  Some user commands:
 ```
 sudo useradd -m username
 sudo passwd username
 ```
-Each user is part of one or more groups.  They can have additional permissions based on their groups.  User and group information is stored in /etc/passwd and /etc/groups.
+Every user belongs to one or more groups.  Like users, each group has a group name and a GID.  Groups are handy to treat a number of users in a certain way, such as give access to a folder as one team that other users will not have access to. Users have a primary (default for assigning files) group and secondary groups (all other groups the user is a member of.  Up to 15.)
+
+User and group information is stored in /etc/passwd and /etc/groups.
 
 #### How does the chmod command change file permissions?
 
@@ -238,13 +235,11 @@ block 2: 72 MB
 
 #### What is the default number of replications for each block?
 
-The default number of replications is 3.  This is called the replication factor and is stored by the NameNode.  
-
-Blocksize and replication factor are configurable per file.
+In Hadoop, the default number of replications is 3.  Known as the replication factor, the value is stored by the NameNode.  Blocksize and replication factor are configurable at the file level.
 
 #### How are these replications typically distributed across the cluster? What is rack awareness?
 
-The HDFS placement policy is to put one replica on one node in the local rack, another on a none in a different (remote rack) and the last on a different node, in the same remote rack.
+The HDFS placement policy is to put one replica on one node in the **local** rack, another on a **remote** rack, and the third in the same remote rack, but on a different node.
 
 #### What is the job of the NameNode? What about the DataNode?
 
