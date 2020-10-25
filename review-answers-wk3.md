@@ -278,30 +278,68 @@ However, because many transactions could have occurred between restarts, this ca
 
 #### How might we scale a HDFS cluster past a few thousand machines?
 
-To scale past a few tho
+In Hadoop HDFS, the NameNode stores metadata for every file and block in the file system.  In very large clusters with many files, the requirements of memory for storing metadata for each file and block is limiting.  The single NameNode architecture becomes a bottleneck.
+
+HDFS Federation feature in Hadoop 2.0 allows clusters to scale by adding more NameNodes.
 
 #### In a typical Hadoop cluster, what's the relationship between HDFS data nodes and YARN node managers?
 
+They work in tandem, alongside one another in the same machines, but they aren't directly related.  The HDFS data nodes correspond with the NameNode and the Yarn node managers with the Resource Manager.
 
 ## Day 5
 
 #### When does the combine phase run, and where does each combine task run?
 
+The combine process is optional, but if configured.  The combine phase runs after the map task is completed and takes place on the mapper server.
+
 #### Know the input and output of the shuffle + sort phase.
+
+The shuffle phase transfers the map output to a reducer.  The sort phase covers the merging and softing of map outputs.  Data is grouped by key and split among the reducers, sorted by the key.  Each reducer obtains all values associated with the same key.  This is the point where large amounts of data will be transfered by network IO.  
 
 #### What does the NodeManager do?
 
+The NodeManager is a per-machine framework agent who is reponsible for creating, monitoring and killing containers at the direction of the ResourceManager (registers and sends heartbeats to RM).  The NodeManager monitors their resource usage (cpu, memory, disk, network) and reporting the same to the Resource manager/Scheduler.  Application masters will request assigned containers and NodeManager creates and starts it.
+
 #### What about the ResourceManager?
 
+The RM has two components, the Scheduler and ApplicationsManager.  The RM arbitrates resources among all the applications in the system.  
+
 #### Which responsibilities does the Scheduler have?
+
+The Scheduler is responsible for allocating resources to the various running applications, subject to capacity, queues, etc.  The Scheduler only handles scheduling and does not monitor or track application statuses.  Does not offer fault-tolerance and doesn't restart tasks on its own.
+
 #### What about the ApplicationsManager?
+
+The ApplicationsManager is responsible for accepting job-submissions, negotiating the first container for executing the ApplicationMaster and provides the service for restarting the ApplicationMaster container in case of failure.
+
 #### What is an ApplicationMaster? How many of them are there per job?
+
+The ApplicationMaster handles making requests to negotiate appropriate resource containers from the Scheduler.  Once it is assigned a container, it requests it from the Nodemaster and tracks their status and monitors progress of tasks, in conjunction with the NodeMaster.  There is one ApplicationMaster per application.  An application is either a single job or a DAG of jobs.
 
 #### What is a Container in YARN?
 
+A container is an abstract notion of a collection of physical resources on the computer.  Such as RAM, CPU cores, disks, network, etc.
+
 #### How do we interact with the distributed filesystem?
 
+We can run filesystem commands using the `bin/hdfs` script.  Many of the commands are the same that we would run on our local filesystem, except we add a `bin/hdfs` and hyphen ('-') in front of the command.
+
+For example:
+```
+// copy
+$ /bin/hdfs -cp /user/hadoop/file1 /user/hadoop/file2  
+
+// list files
+$ /bin/hdfs dfs -ls
+```
+
 #### What do the following commands do?
+
 - hdfs dfs -get /user/adam/myfile ~
+
+This command will copy the remote file named `myfile` in the directory `/user/adam` to my user's home directory on my local filesystem
+
 - hdfs dfs -put ~/coolfile /user/adam/
+
+This command will put my local file `coolfile` located in my home directory into the remote HDFS directory `/user/adam`
 
