@@ -261,11 +261,15 @@ It means that when we have a network problem, we must give up either consistency
 
 #### What does it mean that an operation or transaction on a data store is atomic?
 
+An atomic operation in concurrent programming are operations that run complete independently from other processes.  Reading and writing is done in one operation and other operations cannot interrupt it.  Atomic implies indivisibilty and irreducibility, an atomic operation must be performed entirely or not at all.  Another transaction or operation cannot act on the same data at the same time.
+
 #### In Mongo, are operations on embedded documents atomic? 
+
+A write operation is atomic on the level of a single document, even if the operation modifies multiple embedded documents within a single document.  Otherwise, no.
 
 #### What about operations on referenced documents?
 
-
+In the past referenced documents could not be guaranteed to be updated atomically, but MongoDB 4.0 onwards will provide some multi-document transaction atomicity.
 
 #### What does RDBMS stand for?
 
@@ -281,16 +285,18 @@ Not usually, in SQL database the standard is towards a normalized form which bre
 
 #### Can we freely store any data we like in an RDBMS table the same way we store any data in a mongo collection?
 
-#### What does ACID stand for?
-Atomicity
-Consistency
-Isolation
-Durability
+#### What does ACID stand for? 
+A standard set of properties that guarantee db transactions are processed reliably.
+
+**Atomicity** - guarantees that transaction succeeds or none of it does.
+**Consistency** - ensures all data will be consistent.  Valid according to defined rules that have been applied to the db.
+**Isolation** - guarantees all transactions occur in isolation.  No transaction will be affected by another. A transaction cannot read data from another transaction that hasn't completed.
+**Durability** - Means once a transaction is committed it will stay in the system, even if the system crashes immediately after.  When the system tells the user that the transaction has successed, it must have, in fact, succeeded.
 
 #### What does BASE stand for?
-Basically Available
-Soft state
-Eventual consistency
+**Basically Available** - Focuses on availablity of data even in presence of multiple failures.
+**Soft state** - BASE dbs abandon consistency, and states that state can be changing.
+**Eventual consistency** - Consistency is said to converge on consistent state at some future point.  No guarantee when.
 
 #### What is a SQL dialect?
 
