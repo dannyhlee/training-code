@@ -1,22 +1,79 @@
 MapReduce Whitepaper:
-- What does the Map part of MapReduce take in?  What does it output?
-- What about the Reduce part of MapReduce?
-- What is GFS?
-- How many replications of data does GFS provide by default?  Block size?
-  - HDFS, Hadoop Distributed FileSystem, is the same by default
-- What is the optional Combiner step?
-- Why is the Combiner step useful in the case of a wordcount?
-- Is the Master fault tolerant?  Why or why not?
-- Are the workers fault tolerant?  Why or why not?
-- What happens to the output of completed Map tasks on failed worker nodes?
-- What is Data Locality?  Why is it important?
-- How does MapReduce increase processing speed when some machines in the cluster are running slowly but don't fail?
-- What does a custom partitioning function change about how your MapReduce job runs?
-- What is a hashcode?  How are hashcodes used in (default) partitions?
-- What does it mean that side effects should be atomic and idempotent?
-- What are Counters for?
-- Where do Map tasks read from?  Write to?
-- Where do Reduce tasks read from?  Write to?
-- Which of the above I/O steps would you expect to take the longest?
-- Walk thorugh a MapReduce job that counts words in the sentence : "the quick brown fox jumped over the lazy dog"
+- What does the Map part of MapReduce take in?  What does it output? (1)
+- What about the Reduce part of MapReduce? (1)
+- What is the optional Combiner step? (1)
+- What is GFS? (2)
+- How many replications of data does GFS provide by default?  Block size? (2)
+  - HDFS, Hadoop Distributed FileSystem, is the same by default (v1 is the same, v2+ is 128MB)
+- Why is the Combiner step useful in the case of a wordcount? (2)
+- Is the Master fault tolerant?  Why or why not? (3)
+- Are the workers fault tolerant?  Why or why not? (3)
+- What happens to the output of completed Map tasks on failed worker nodes? (3)
+- What is Data Locality?  Why is it important? (4)
+- How does MapReduce increase processing speed when some machines in the cluster are running slowly but don't fail? (4)
+- What does a custom partitioning function change about how your MapReduce job runs? (4)
+- What is a hashcode?  How are hashcodes used in (default) partitions? (5)
+- What does it mean that side effects should be atomic and idempotent? (5)
+- What are Counters for? (5)
+- Where do Map tasks read from?  Write to? (6)
+- Where do Reduce tasks read from?  Write to? (6)
+- Which of the above I/O steps would you expect to take the longest? (6)
+- Walk thorugh a MapReduce job that counts words in the sentence : "the quick brown fox jumped over the lazy dog" (6)
   - How does this work for 2 input blocks (so 2 Map tasks) and 1 reduce task?  What if we had 2 Reduce tasks?
+
+- What was the "Hadoop Explosion"?
+- What about CDH?
+- What are some differences between hard disk space and RAM?
+- What is a VM? (short)
+- What is AWS? (short)
+- What is/was Unix?  Why is Ubuntu a Unix-like operating system?
+- Know basic file manipulation and navigation commands in Unix:
+  - ls -al
+  - cd
+  - pwd
+  - mkdir
+  - touch
+  - nano
+  - man
+  - less
+  - cat
+  - mv
+  - cp
+  - rm
+  - history
+- What's the difference between an absolute and a relative path?
+- How do permissions work in Unix?
+- What are users, what are groups?
+- How does the chmod command change file permissions?
+- What is a package manager? what package manager do we have on Ubuntu?
+- What is ssh?
+
+- Be able to explain the significance of Mapper[LongWritable, Text, Text, IntWritable] and Reducer[Text, IntWritable, Text, IntWritable]
+- What needs to be true about the types contained in the above generics?
+- What are the 3 Vs of big data?
+- What are some examples of structured data?  Unstructured data?
+- What is a daemon?
+- What is data locality and why is it important?
+- How many blocks will a 200MB file be stored in in HDFS, if we assume default HDFS block size for Hadoop v2+?
+- What is the default number of replications for each block?
+- How are these replications typically distributed across the cluster?  What is *rack awareness*?
+- What is the job of the NameNode? What about the DataNode?
+- How many NameNodes exist on a cluster?
+- How are DataNodes fault tolerant?
+- How does a Standby NameNode make the NameNode fault tolerant?
+- What purpose does a Secondary NameNode serve?
+- How might we scale a HDFS cluster past a few thousand machines?
+- In a typical Hadoop cluster, what's the relationship between HDFS data nodes and YARN node managers?
+
+- When does the combine phase run, and where does each combine task run?
+- Know the input and output of the shuffle + sort phase.
+- What does the NodeManager do?
+- What about the ResourceManager?
+  - Which responsibilities does the Scheduler have?
+  - What about the ApplicationsManager?
+- What is an ApplicationMaster?  How many of them are there per job?
+- What is a Container in YARN?
+- How do we interact with the distributed filesystem?
+- What do the following commands do?
+  - hdfs dfs -get /user/adam/myfile ~
+  - hdfs dfs -put ~/coolfile /user/adam/
