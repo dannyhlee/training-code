@@ -67,12 +67,36 @@ Referenced from: https://data-flair.training/blogs/hadoop-inputformat/
 #### Why do we say that MapReduce has an acyclic data flow?
 #### Explain the deficiency in using Hive for interactive analysis on datasets.  How does Spark alleviate this problem?
 #### What is the *lineage* of an RDD?
+
 #### RDDs are lazy and ephemeral.  What does this mean?
+
 #### What are the 4 ways provided to construct an RDD?
+
+1. From a file in a shared FS - contents of a file
+2. Parallelizing a Scala collection - taking a data structure and dividing it into slices
+3. Transforming an existing RDD - we get a dataset produced by a transformation on the prior RDD
+4. Change the persistence of an existing RDD - we get the cached version of the prior dataset which enables efficient processing.  Uses memory, and creates memory pressure.
+
 #### What does it mean to transform an RDD?
+
+
+
 #### What does it mean to cache an RDD?
+
 #### What does it mean to perform a parallel operation on an RDD?
+
+This is an "action" (reduce, collect, foreach) that causes your RDD to actually be evaluated.  Reduce, aggregate dataset to value, return to driver.  Map, return entire dataset to driver, foreach cases a side effect for each element in the collection. 
+
 #### Why does Spark need special tools for shared variables, instead of just declaring, for instance, var counter=0?
+
+
 #### What is a broadcast variable?
+
+These are global, read only variables and are sent to each worker/task, rather than passing them in.
+
 #### What is an accumulator?
+
+Are variables used to bridge the gap between different scopes (local runtimes) if we defined local variables to act as counters, we would have trouble merging them together at the end of the operation.  We can use accumulators to "add" (or do another accumulating operation) for parallel sums.  Is this related to context and serialization?
+
 #### How would the Logistic Regession example function differently if we left off the call to .cache() on the points parsed from file?
+
