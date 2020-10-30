@@ -100,3 +100,21 @@ Are variables used to bridge the gap between different scopes (local runtimes) i
 
 #### How would the Logistic Regession example function differently if we left off the call to .cache() on the points parsed from file?
 
+
+## Be comfortable enough with the following terms to recognize them:
+
+#### RDD
+
+#### Action
+
+#### Transformation
+
+#### lineage
+
+#### cache
+
+#### lazy evaluation
+
+#### broadcast variable
+
+#### accumulator
