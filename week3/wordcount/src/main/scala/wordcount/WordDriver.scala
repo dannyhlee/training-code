@@ -5,6 +5,7 @@ import org.apache.hadoop.io.{IntWritable, LongWritable, Text}
 import org.apache.hadoop.mapreduce.Job
 import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, TextInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+import org.apache.hadoop.mapreduce.lib.
 
 
 /**
@@ -13,7 +14,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
  * and Reducer classes, and specify intermediate data formats
  *
  * We're going to make use of command line arguments here
- *  which can be access in the args array
+ *  which can be access in the args arrayjob
  */
 object WordDriver extends App {
 
