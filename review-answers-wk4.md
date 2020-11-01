@@ -37,7 +37,13 @@ Referenced from: https://data-flair.training/blogs/hadoop-inputformat/
 ## Review Questions
 ### Hive
 #### What is Hive?
+
+Hive is an open source data warehouse software for reading, writing and managing large data set files stored in HDFS or other data storage system such as Apache HBase.  Using a SQL like query language (HQL) data can be queryed using MapReduce, using SQL-like statements.
+
 #### Where is the default location of Hive's data in HDFS?
+
+Hive's default location is /user/hive/warehouse.
+
 #### What is an External table?
 #### What is a managed table?
 #### What is a Hive partition?
