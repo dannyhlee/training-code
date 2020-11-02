@@ -96,9 +96,10 @@ Beeline is a command line interface used to access hive server 2.
 ### Hive Syntax questions: How do we....
 
 #### create a table?
-
+```
 CREATE TABLE STATES
 	(NAME STRING,
+	NAME REGION,
 	CAPITAL_CITY STRING,
 	POPULATION INT,
 	AREA DECIMAL,
@@ -106,42 +107,79 @@ CREATE TABLE STATES
 	ROW FORMAT DELIMITED
 	FIELDS TERMINATED BY ', '
 	TBLPROPERTIES("skip.header.line.count"="1");
-
+```
 #### load data into a table?
 local filesystem:
+```
 LOAD DATA LOCAL INPATH "/home/dannylee/file.csv" INTO TABLE STATES;
+```
 hdfs:
+```
 LOAD DATA INPATH "/user/dannylee/file.csv" INTO TABLE STATES;
+```
 
 #### query data in a table?
-
+```
 SELECT * FROM STATES
 ORDER BY FOUNDING_YEAR DESC
 LIMIT 50;
-
+```
 #### filter the records from a query?
-
+```
 SELECT NAME, CAPITAL_CITY FROM STATES
-WHERE POPULATION>100000000
+WHERE REGION='nw'
 ORDER BY FOUNDING_YEAR DESC;
-
+```
 #### group records and find the count in each group?
-
+```
+SELECT NAME, COUNT(POPULATION) FROM STATES
+GROUP BY REGION;
+```
 #### write the output of a query to HDFS?
+INSERT OVERWRITE DIRECTORY '/user/hive/states'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
 
 #### specify we're reading from a csv file?
 
+FIELDS TERMINATED BY ','
 
 ### Spark : Cluster Computing with Working Sets
+
 #### What does Cluster Computing refer to?
+
+Cluster computing refers to a distributed framework of inter-connect computers for computational intensive data processing using a combination of high availability, load balancing and high performance computers to compute data with cost efficiency, processing speed, expandibility and scalability.
+
 #### What is a Working Set?
+
+Is a dataset stored in memory so that processing can work on it efficiently.
+
 #### What does RDD stand for?
+
+Resilient Distributed Dataset.
+
 #### What does it mean when we say an RDD is a collection of objects partitioned across a set of machines?
+
+The dataset is split up, by default a hashcode is used to make the divisions, and stored on different cluster nodes on the system.  The partition is a logical chunk of a large distributed data set.
+
 #### Why do we say that MapReduce has an acyclic data flow?
+
+Acyclic means without cycles, a series of steps that move in a one way flow and don't return to the same step.  MapReduce follows a series of steps and generates immutable outputs and does not offer looping to work on data iteratively.
+
 #### Explain the deficiency in using Hive for interactive analysis on datasets.  How does Spark alleviate this problem?
+
+Hive needs to run mapreduce each time it is processing data, and that includes writing out to disk and reading from disk.  The disk IO is a bottleneck as as well as the lost time recalculating (in some cases) the same data over and over again.  Spark alleviates this by holding the data memory through caching and also providing a way to run iterative processes.
+
 #### What is the *lineage* of an RDD?
 
+The lineage of RDD is the chain of transformations on data that produced the RDD.  By keeping a history or "family tree" of how the RDD came to be, Spark is able to easily reproduce lost partitions.
+
 #### RDDs are lazy and ephemeral.  What does this mean?
+
+They are lazy in that they are not calculated until there is an Action done on them that produces a side effect or return results.  The RDD isn't processed until they are ready to be used.  
+
+They are ephemeral in that they will only exist when they are needed and unless we prevent it, they will disappear after they are used.  We can use .cache or .persist to ask Spark to hold onto the RDD for longer, but it is a request and depends on available memory resources.
+
 
 #### What are the 4 ways provided to construct an RDD?
 
@@ -152,15 +190,24 @@ ORDER BY FOUNDING_YEAR DESC;
 
 #### What does it mean to transform an RDD?
 
-
+To transform an RDD is to  produce a new RDD from an existing one through a series of functions.  
 
 #### What does it mean to cache an RDD?
+
+Caching an RDD is keeping it persisted in memory to speed up processing and prevent recreation through its lineage.  If we know that we are going to use it again in the series of tasks we are performing we can request that spark keep it in memory.  
+
+We can cache in four ways:
+1. MEMORY_ONLY - default.  If not enough, recompute.
+2. MEMORY_ONLY_SER - attempt to store it in memory serialized, requires less memory but more computer power to ser/deserialize it.
+3. MEMORY_AND_DISK - attempt to store in memory but if not enough room, put it on disk.
+4. MEMORY_AND_DISK_SER - as above, but stored serialized
 
 #### What does it mean to perform a parallel operation on an RDD?
 
 This is an "action" (reduce, collect, foreach) that causes your RDD to actually be evaluated.  Reduce, aggregate dataset to value, return to driver.  Map, return entire dataset to driver, foreach cases a side effect for each element in the collection. 
 
 #### Why does Spark need special tools for shared variables, instead of just declaring, for instance, var counter=0?
+
 
 
 #### What is a broadcast variable?
@@ -180,7 +227,11 @@ Are variables used to bridge the gap between different scopes (local runtimes) i
 
 #### Action
 
+An action is an event that causes the RDD to be evaluated and produce a result or have a side effect.  (Reduce, collect, foreach)
+
 #### Transformation
+
+
 
 #### lineage
 
@@ -188,9 +239,16 @@ Are variables used to bridge the gap between different scopes (local runtimes) i
 
 #### lazy evaluation
 
+
 #### broadcast variable
 
+useful to pass global read-only values to each worker/task efficiently.
+
 #### accumulator
+
+since workers do not share scope and run in their own jvm, accumulators are "global" variables that can be used across the cluster to share state.
+
+
 
 #### Why is it necessary for Spark to write to disk after a shuffle?
 
