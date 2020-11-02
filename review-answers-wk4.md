@@ -191,3 +191,14 @@ Are variables used to bridge the gap between different scopes (local runtimes) i
 #### broadcast variable
 
 #### accumulator
+
+#### Why is it necessary for Spark to write to disk after a shuffle?
+
+Certain operations in Spark trigger a shuffle.  The shuffle is Spark's way of redistributing data so it is grouped differently across partitions.  Since data is distributed across the cluster when Spark needs to perform an operation (like reduceByKey) on a set of data, it needs to generate a RDD that contains a key and all the values which may not reside on the same partition or machine.  So they must be co-located.
+
+When this data is co-located and operated on through map tasks to organize the data, and reduce tasks to aggregate it.  The results from the map tasks are kept in memory until they no longer fit, at which point they are sorted and written to a single file.  Reduce will read the sorted blocks from this file.
+
+Certain shuffles consume lots of heap memory and if it doesn't fit in memory it will spill to disk.  
+
+Shuffle generates large amounts of intermediate files that will not be deleted until the references to the RDDs generated are gone (as to preserve lineage).
+
