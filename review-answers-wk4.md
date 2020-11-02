@@ -1,4 +1,5 @@
 
+
 ## Miscellaneous Notes
 
 ### Configuration files for yarn & hdfs
@@ -42,28 +43,94 @@ Hive is an open source data warehouse software for reading, writing and managing
 
 #### Where is the default location of Hive's data in HDFS?
 
-Hive's default location is /user/hive/warehouse.
+Hive  default location for storing data is in /user/hive/warehouse under directories with the database name and table name as subdirectory names.
 
 #### What is an External table?
+
+We can store TBs of data outside of Hive to make it easier to store, but we can still query them by creating an external table.  The metadata/schema is described by external files and other processes can access the data outside of hive.  These can be stored on HDFS, or other cloud storage.
+
 #### What is a managed table?
+
+A managed table is one which is internal to Hive, where it owns the data.  The data, its properties and layout can only be accessed via Hive
+
 #### What is a Hive partition?
+
+Hive partitions allow us to division our data in a way that breaks the data set into smaller, logically organized pieces.  By splitting on data that we are interesting on querying and working with (generally with low cardinality) we can partition the data into chunks that make our data processing more efficient because we can skip blocks of data that don't fit into our column/columns.
+
 #### Provide an example of a good column or set of columns to partition on.
+
+A good column or set of columns to partition on are ones with low cardinality (low number of different choices in the set) and that we are interested in.  we want to be able break the data down into smaller chunks by this division so a column of states if we are working with state-level data would help us focus on one state or group of states, rather than the whole country.
+
 #### What's the benefit of partitioning?
+
+The benefits are filtering out datasets that will not fit our requirements from the start.  By dividing our data into logical partitions we can drop whole subsets of data and just work with relevant data.
+
+Some disadvantages are number of HDFS files increases, number of intermediate files increases.  The metastore scales with the number of partitions.
+
 #### What does a partitioned table look like in HDFS?
+
+A partitioned table is a set of folders where the subdirectories are named by column and its specific range.  For example, if the column we were partitioning on was the state column, we might see "state=nd" or "state=sd" and inside that folder would a file with the subset of data that matched.
+
 #### What is a Hive bucket?
+
+A Hive bucket also divides our data into subsets.  However, in this case we choose columns of high cardinality and that do not mean that much to me.  Its used when we want to break our data into smaller chunks, but have a more randomized representation of the larger data set.
+
+We can also skew on data that should be broken out to a separate directory, because hive creates one directory per skewed key with all remaining keys going into a separate bucket.
+
 #### What does it mean to have data skew and why does this matter when bucketing?
+
+Data skewing will break our data into lopsided buckets.  We can use this to our advantage if we have some oversized datasets, for example in states, we might have a key for the high population states (CA, TX, FL, NY) and then put the rest of the states in the "rest" group.
+
 #### What does a bucketed table look like in HDFS?
+
+The data is separated into separate folders by the skewed key or column's data like in with partitions.
+
 #### What is the Hive metastore?
+
+The metastore is a relational database that holds Hive's metadata of persistent relational entities (databases, schema, tables, columns, partitions).  It includes info like their structure and relationships.
+
 #### What is beeline?
 
+Beeline is a command line interface used to access hive server 2.  
+
 ### Hive Syntax questions: How do we....
+
 #### create a table?
+
+CREATE TABLE STATES
+	(NAME STRING,
+	CAPITAL_CITY STRING,
+	POPULATION INT,
+	AREA DECIMAL,
+	FOUNDING_YEAR DATE)
+	ROW FORMAT DELIMITED
+	FIELDS TERMINATED BY ', '
+	TBLPROPERTIES("skip.header.line.count"="1");
+
 #### load data into a table?
+local filesystem:
+LOAD DATA LOCAL INPATH "/home/dannylee/file.csv" INTO TABLE STATES;
+hdfs:
+LOAD DATA INPATH "/user/dannylee/file.csv" INTO TABLE STATES;
+
 #### query data in a table?
+
+SELECT * FROM STATES
+ORDER BY FOUNDING_YEAR DESC
+LIMIT 50;
+
 #### filter the records from a query?
+
+SELECT NAME, CAPITAL_CITY FROM STATES
+WHERE POPULATION>100000000
+ORDER BY FOUNDING_YEAR DESC;
+
 #### group records and find the count in each group?
+
 #### write the output of a query to HDFS?
+
 #### specify we're reading from a csv file?
+
 
 ### Spark : Cluster Computing with Working Sets
 #### What does Cluster Computing refer to?
