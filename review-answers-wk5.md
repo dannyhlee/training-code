@@ -59,11 +59,11 @@ EC2 stands for Elastic Compute Cloud,  elastic respresents that the service is r
 
 #### S3?
 
-Amazon S3 (Simple Storage Service) provides object storage, each with its own key/id (aka Buckets).  Can be private or accessed progratically or through services like CloudFront (Amazon's CDN).  S3 is used as a data lake (structured and unstructured data store with scehma-on-read for ML, PA (predictive analytics) DD (Data discovery), backup and restoration (along with EBS, EFS or S3 glacier). S3 is secure and providing 11 nines of data durability 99.999999999.
+Amazon S3 (Simple Storage Service) provides object storage, each with its own key/id (aka Buckets).  Can be private or accessed programatically or through services like CloudFront (Amazon's CDN).  S3 is used as a data lake (structured and unstructured data store with scehma-on-read for ML, PA (predictive analytics) DD (Data discovery), backup and restoration (along with EBS, EFS or S3 glacier). S3 is secure and providing 11 nines of data durability 99.999999999.
 
 #### EMR?
 
-[Amazon Elastic MapReduce](https://aws.amazon.com/emr/) (EMR) is a fully managed Hadoop and Spark platform from Amazon Web Service (AWS). With EMR, AWS customers can quickly spin up multi-node Hadoop clusters to process big data workloads.
+[Amazon Elastic MapReduce](https://aws.amazon.com/emr/) (EMR) is a fully managed PaaS solution for distributing and processing data from Amazon Web Service (AWS). With EMR, AWS customers can quickly spin up multi-node Hadoop clusters to process big data workloads.  EMR has tools like Hive and Spark and offers horizontally scaling on EC2 instances.  Elastic and available on demand, with the ability to easily spin up and spin down clusters and paying for what you use without the cost of building your own infrasturcture.  Able to handle massive data loads.
 
 #### What does it mean to run an EMR Step Execution?
 
@@ -86,7 +86,7 @@ Deploy globally in minutes - expand to new geo regions and deploy infrastructure
 
 #### What is the Spark History Server?
 
-A monitoring tool that displays info about completed Spark applications.  Info is pulled from data that applications by default write to a directory on a HDFS (event logs).    It allows recreation of the applications web UI from event logs.  An extension of the Apache Spark Web User Interface (UI) that presents a visual interface with detailed information about completed and running Spark jobs on a cluster. You can dive into job-specific metrics, and information about scheduler stages, tasks, and running executors. 
+A monitoring tool that displays info about completed Spark applications.  Info is pulled from data that applications by default write to a directory on a HDFS (event logs).    It allows re-creation of the applications web UI from event logs.  An extension of the Apache Spark Web User Interface (UI) that presents a visual interface with detailed information about completed and running Spark jobs on a cluster. You can dive into job-specific metrics, and information about scheduler stages, tasks, and running executors. 
 
 #### What does it mean to “spill to disk” when executing spark tasks?
 
@@ -98,7 +98,7 @@ Cached datasets that do not fit also spill to disk or are recomputed depending o
 
 #### Why can Spark skip entire stages if they are the same between jobs?
 
-When Spark shuffles, it also writes to disk.  When it writes to disk the data can be reused in the future jobs, so Spark will skip stages if the output of a stage already exists on local disk.
+When Spark shuffles, it also writes to disk.  When it writes to disk the data can be reused in the future jobs, so Spark will skip stages if the output of a stage already exists on local disk or is cached in memory.
 
 #### What is a reasonable number of partitions for Spark?
 
@@ -106,7 +106,7 @@ Because the level of parallelism is important for fully utilizing a cluster, it 
 
 #### When during a Job do we need to pay attention to the number of partitions and adjust if necessary?
 
-This would be the most painful part of any Spark pipeline, the shuffle triggered by wide transformations.  The default `spark.sql.shuffle.partitions` option sets the number of partitions used during shuffles and this can work sub-optimally depending on your data size. Too little data and we may end up with many partitioned files with few records in each partitions.   Too much data and tasks may take a long time to run or we might get out of memory errors.
+This would be the most painful part of any Spark pipeline, the shuffle triggered by wide transformations.  The default `spark.sql.shuffle.partitions` option sets the number of partitions used during shuffles (200 by default) and this can work sub-optimally depending on your data size. Too little data and we may end up with many partitioned files with few records in each partitions.   Too much data and tasks may take a long time to run or we might get out of memory errors.
 
 After a shuffle it might be necessary to repartition your data.  You can set this with `spark.conf.set("spark.sql.shuffle.partitions", 16)`
 
@@ -123,6 +123,8 @@ Amount of memory to use per executor process. Default 1g, default allocated from
 In the AWS EMR dashboard we can view a clusters Steps/jobs and take a look at the logs (controller, syslog, stderr, stdout) for application progress, error messages and exit conditions.  We can look for Exception and Error messages.  Following the applications progress by viewing which tasks finished successfully and at which point our app got hung up can give us clues as to which part of the code/logical plan to examine.  
 
 We can further optimize our apps by going into the Spark history server to see what stages were skipped by drilling down into the stages to see shuffle details (read/write), skipped stages, and specific executors to see how much time was spent doing GC, how the tasks were distributed among our executors resources. 
+
+If log aggregation is turned on (yarn.log-aggregation-enable) container logs are copied to HDFS and deletd on the local machine.  These logs can be viewed using `yarn logs -applicationId <app ID>`.  Or viewed in HDFS.
 
 #### What is a Spark Application? Job? Stage? Task?
 
