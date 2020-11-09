@@ -1,12 +1,23 @@
 
+
 #### What is the lineage of an RDD?
 
-The lineage of an RDD is a graph of all the parent RDDs to this RDD.  It is the path of transformation as a logical execution plan.   Aka RDD operator graph or RDD dependency graph.  The logical execution plan (sequence of commands) implicitly defines a DAG of RDD objects that will be used later when an action is called.  When we read the lineage it should be from bottom up.
+The lineage of an RDD is a graph of all the parent RDDs to this RDD.  It is the path of transformation as a logical execution plan.   Aka RDD operator graph or RDD dependency graph.  The logical execution plan (sequence of commands) implicitly defines a DAG of RDD objects that will be used later when an action is called.  When we read the lineage it should be from bottom up because it starts with earliest RDD (with no dependencies on other RDDs or refencing cached data) and ends with the RDD that produces the action that has been called.
+
+https://books.japila.pl/apache-spark-internals/rdd/spark-rdd-lineage/
+
 
 #### How can we see the Lineage?
 
-We can view the lineage using RDD.toDebugString or the EXPLAIN statement.  The EXPLAIN statement by default provides information about the physical plan, but can be EXTENDED.
+We can view the lineage of an RDD by calling the toDebugString() method on it.  That method will return a string describing the RDD's lineage (aka DAG/logical plan) and its recursive dependencies.
 
+A related Another way to  or the EXPLAIN statement.  The EXPLAIN statement used an HQL query by default provides information about the physical plan, but can be EXTENDED to show the:
+1. parsed logical plan
+2. analyzed logical plan
+3. optimized logical plan
+4. physical plan
+
+http://spark.apache.org/docs/latest/sql-ref-syntax-qry-explain.html
 
 #### What do the indentations mean in the printed lineage?
 
@@ -123,19 +134,27 @@ A stage is a sequence of tasks that can be run together in parallel without a sh
 
 A task is a single operation applied to a partition, each task is executed as a single thread on an executor.  If you have 5 partitions of your data, a map() operation triggers 5 Tasks, one for each partition, taking place on 5 executors.
 
+
 #### When we cache an RDD, can we use it across Tasks? Stages? Jobs?
 A cached RDD is normally shared between stages, but normally not Jobs.  However, if shuffle files are written to local disk, they could be used by future jobs.  
 
+
 #### What are Persistence Storage Levels in Spark?
 
-MEMORY_ONLY Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they're needed. This is the default level.
-MEMORY_AND_DISK Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don't fit on disk, and read them from there when they're needed.
-MEMORY_ONLY_SER (JAVA AND SCALA) Store RDD as _serialized_ Java objects (one byte array per partition). This is generally more space-efficient than deserialized objects, especially when using a [fast serializer](https://spark.apache.org/docs/2.2.0/tuning.html), but more CPU-intensive to read.
-MEMORY_AND_DISK_SER (JAVA AND SCALA) Similar to MEMORY_ONLY_SER, but spill partitions that don't fit in memory to disk instead of recomputing them on the fly each time they're needed.
-DISK_ONLY Store the RDD partitions only on disk.
-MEMORY_ONLY_2 - REPLICATE EACH PARTITION ON TWO CLUSTERS
+##### MEMORY_ONLY Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they're needed. This is the default level.
+
+##### MEMORY_AND_DISK Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don't fit on disk, and read them from there when they're needed.
+
+##### MEMORY_ONLY_SER (JAVA AND SCALA) Store RDD as _serialized_ Java objects (one byte array per partition). This is generally more space-efficient than deserialized objects, especially when using a [fast serializer](https://spark.apache.org/docs/2.2.0/tuning.html), but more CPU-intensive to read.
+ 
+##### MEMORY_AND_DISK_SER (JAVA AND SCALA) Similar to MEMORY_ONLY_SER, but spill partitions that don't fit in memory to disk instead of recomputing them on the fly each time they're needed.
+
+##### DISK_ONLY Store the RDD partitions only on disk.
+
+#####  MEMORY_ONLY_2 - REPLICATE EACH PARTITION ON TWO CLUSTERS
 MEMORY_AND_DISK_2, ETC.... Same as the levels above, but replicate each partition on two cluster nodes.  Provides faster fault recovery.  Lost data doesnt need to be recomputed, just read.
-OFF_HEAP Similar to MEMORY_ONLY_SER, but store the data in [off-heap memory](https://spark.apache.org/docs/2.2.0/configuration.html#memory-management). This requires off-heap memory to be enabled.
+
+#####  OFF_HEAP Similar to MEMORY_ONLY_SER, but store the data in [off-heap memory](https://spark.apache.org/docs/2.2.0/configuration.html#memory-management). This requires off-heap memory to be enabled.
 
 #### Some levels have _SER, what does this mean?
 
