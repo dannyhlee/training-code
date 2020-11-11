@@ -19,6 +19,8 @@ scala> println(plan.numberedTreeString)
 
 Deep dive into joins: https://www.oreilly.com/library/view/high-performance-spark/9781491943199/ch04.html
 
+Image below from https://www.slideshare.net/databricks/new-developments-in-spark
+
 ![shuffle](images/1-shuffle.jpg)
 
 ![broadcast](images/2-broadcast.jpg)
@@ -27,4 +29,7 @@ Deep dive into joins: https://www.oreilly.com/library/view/high-performance-spar
 
 ![hybrid-b](images/4-hybrid-b.jpg)
 
+---
 
+#### SBT overview 
+- https://www.slideshare.net/hermannhueck/pragmatic-sbt
