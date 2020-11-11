@@ -33,3 +33,30 @@ Image below from https://www.slideshare.net/databricks/new-developments-in-spark
 
 #### SBT overview 
 - https://www.slideshare.net/hermannhueck/pragmatic-sbt
+
+
+--- 
+#### Catalyst and Spark SQL
+
+The Catalyst extensible query optimizer helps develop a physical plan to select the lowest-cost plan for processing data.  The sequence of events is:
+- unresolved logical plan
+- reads catalog and generates a logical plan
+- creates an optimized logical plan
+- creates multiple physical plans
+- evalutes the best solution usijg cost method
+- selects a physical plan
+- generates RDDs
+
+#### Dataframes and Datasets
+
+DataFrames have named columns and a structure like SQL/collection tables.  They hold data in records and have columns with datatypes.
+
+DataSets are between DataFrames and RDDs, they contaiun strongly typed collections of distributed data.  Content of a DataSet is typically a Scala case class.  
+
+They are both distributed collections of data that are processed using the catalyst optimzer to convert them to RDD.  
+
+In Spark 2.0 they are unified and DataFrame is just a DataSet that contains generic Row objects instead of specific Scala case classes.
+
+ex: DataSet[Comic] - a dataset of comics, DataSet[Person] a dataset of persons, DataSet[Row] means a dataset containing generic Rows - or a DataFrame.  We can also call DataFrames "untyped DataSets".
+
+
