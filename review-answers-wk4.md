@@ -1,5 +1,6 @@
 
 
+
 ## Miscellaneous Notes
 
 ### Configuration files for yarn & hdfs
@@ -55,17 +56,17 @@ A managed table is one which is internal to Hive, where it owns the data.  The d
 
 #### What is a Hive partition?
 
-Hive partitions allow us to division our data in a way that breaks the data set into smaller, logically organized pieces.  By splitting on data that we are interesting on querying and working with (generally with low cardinality) we can partition the data into chunks that make our data processing more efficient because we can skip blocks of data that don't fit into our column/columns.
+Hive partitions allow us to division our data in a way that breaks the data set into smaller, logically organized pieces.  This reduces the amount of data that needs to be processed.  Generally we split data on columns that we are interested in and with low cardinality.  A good example is breaking a large dataset of company sales by date, first by year, then by month, then by day.  
 
 #### Provide an example of a good column or set of columns to partition on.
 
-A good column or set of columns to partition on are ones with low cardinality (low number of different choices in the set) and that we are interested in.  we want to be able break the data down into smaller chunks by this division so a column of states if we are working with state-level data would help us focus on one state or group of states, rather than the whole country.
+A good column or set of columns to partition on are ones with low cardinality (low number of different choices in the set) and that we are interested in.  We want to be able break the data down into smaller chunks by this division so a column of states if we are working with state-level data would help us focus on one state or group of states, rather than the whole country.
 
 #### What's the benefit of partitioning?
 
 The benefits are filtering out datasets that will not fit our requirements from the start.  By dividing our data into logical partitions we can drop whole subsets of data and just work with relevant data.
 
-Some disadvantages are number of HDFS files increases, number of intermediate files increases.  The metastore scales with the number of partitions.
+Some disadvantages are number of HDFS files increases, number of intermediate files increases.  The Metastore scales with the number of partitions.
 
 #### What does a partitioned table look like in HDFS?
 
@@ -74,6 +75,8 @@ A partitioned table is a set of folders where the subdirectories are named by co
 #### What is a Hive bucket?
 
 A Hive bucket also divides our data into subsets.  However, in this case we choose columns of high cardinality and that do not mean that much to me.  Its used when we want to break our data into smaller chunks, but have a more randomized representation of the larger data set.
+
+The division of data into buckets can also be calculated with a hash function.  
 
 We can also skew on data that should be broken out to a separate directory, because hive creates one directory per skewed key with all remaining keys going into a separate bucket.
 
@@ -87,11 +90,15 @@ The data is separated into separate folders by the skewed key or column's data l
 
 #### What is the Hive metastore?
 
-The metastore is a relational database that holds Hive's metadata of persistent relational entities (databases, schema, tables, columns, partitions).  It includes info like their structure and relationships.
+The Hive metastore is a relational database which acts as a repository for Hive's metadata.  Metadata is data that describes other data.  In this case, that data is the relationships, schema, structure of the databases and tables in Hive.  The metastore uses a RDBMS to organize and store this data.
+
+By default, it uses Derby, and the metastore service and API will run in the same JVM as Hive.  This can be limiting because only one Hive session can be open using an embedded database.   So, there are two other modes, Local and Remote.  Both provide access for Derby, as well as other JDBC compliant databases like MySQL, MS SQL, Oracle and Postgres.
+
+In Local Metastore mode the metastore still runs in the same process as Hive, but the database is running on a separate process which can be on the local machine or remote.  In Remote Metastore mode the metastore runs in a separate JVM, not in the Hive JVM.  
 
 #### What is beeline?
 
-Beeline is a command line interface used to access hive server 2.  
+Beeline is a Hive client in a CLI (command line interface) format that uses JDBC  to connect to Hive Server 2.   Beeline commands start with ! and !help displays help files.  
 
 ### Hive Syntax questions: How do we....
 
