@@ -1,31 +1,109 @@
+
 ## Review:
 
 #### In broad terms, what is a Join?
+
+A join combines two DataSets by combining their records and creating a new DataFrame.  This is an important operation to bring related data together for analysis, data processing and storage.  By combining one dataset with 0 or more records from another dataset we can produce a dataset that contains records from both sets.  In the process we make our dataset "wider" (more columns).
+
+Calling join on an RDD will combine the records in two RDDs. .join expects RDD<K,V>, where <K,V> is a two-tuple. The output will be an RDD containing a <K,V> pair with the same key and the values of both RDDs combined for the value.  
+
+- Example:  RDD<String, Double> `join` RDD<String, String> outputs RDD <String, (Double, String)>
+
+A query that accesses multiple rows of the same or different tables at one time is called a _join_ query. [ref](https://www.postgresql.org/docs/current/tutorial-join.html)
+
+`join`returns a DataFrame, untyped
+`crossjoin` creates a cartesian join between two DataSets and returns a DataFrame, untyped
+`joinwith` creates a join between two DataSets and returns a DataSet, type-preserving
+
+https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/spark-sql-joins.html
+
 #### How does a shuffle hash join work in Spark?
+
+The shuffle hash join takes the two RDDs and transfers data over the network so that data from each RDD that share the same hash value are colocated on the same partition.  Its an expensive operation, which can be avoided when the RDDs have a **known partitioner** such as when the preceeding operation passes the same Partitioner to both RDDs.  In that case, the data will be split up the same way and no shuffle will need to take place and the operation becomes a narrow dependency.
+
 #### How does a broadcast join work in Spark?
+
+The broadcast join is a strategy of taking a smaller dataset (that is, an RDD) and broadcasting it as a broadcast variable.  First, we map the RDD to the driver, then we broadcast the resul to each partition.  Once the data has been broadcast, it is combined with each partition of the larger RDD in a **mapside combine**.  
+
+Another strategy is to use broadcast joins for highly skewed keys in your RDD, you create a HashMap of just these skewed keys and do a broadcast join.  Then, you filter out those keys and do a standard join with the reduced sized data.
+
 #### Why are broadcast joins significantly faster than shuffle joins?
+
+Because we are not transfer the entire set of both RDDs across the network, which can be huge amounts of data.  If we have a historical dataset as the RDD to be joined to, and a new (smaller) dataset of last week's data, it makes sense that we would take the smaller amount of data to where the larger dataset is.  
+
+In a way, its intuitive in the same way that Hadoop/Yarn brings the compute to the data during a MapReduce.
+
 #### Why can't we always use broadcast joins?
+
+For one, there is a memory limit.  The default limit for `spark.sql.autoBroadcastJoinThreshold` is 10mb, but it is limited by system memory resources (current max is 8gb per object).  If we have 20 executors, and we are broadcasting a 1 GB data frame, that will cost us 20 GB of RAM.
+
 #### What is Spark SQL?
+
+
+
+
 #### How does Spark SQL relate to the Spark applications we've been writing, using RDDs?
+
 #### How does Spark SQL evaluate a SQL query?
+
 #### What is the catalyst optimizer?
+
 #### Why are there multiple APIs to work with Spark SQL?
+
 #### What are DataFrames?
+
 #### What are DataSets?
+
 #### How are DataFrames and DataSets "unified" in Spark 2.0?
+
 #### What is the SparkSession?
+
 #### Can we access the SparkContext via a SparkSession?
+
 #### What other contexts are superseded by SparkSession?
+
 #### What are some data formats we can query with Spark SQL?
-#### Are DataSets lazily evalauted, like RDDs?
+
+#### Are DataSets lazily evaluated, like RDDs?
+
 #### What are some functions available to us when using DataFrames?
+
 #### What's the difference between aggregate and scalar functions?
+
 #### How do we convert a DataFrame to a DataSet?
+
 #### How do we provide structure to the data contained in a DataSet?
+
 #### How do we make a Dataset queryable using SQL strings?
+
 #### What is the return type of spark.sql("SELECT * FROM mytable") ?
+
 #### How do we see the logical and physical plans produced to evaluate a DataSet?
 
+####  What is a join condition?
+####  What is the difference between inner, outer left, outer right, and outer full joins?
+####  What is a cross join / cartesian join?
+####  If I join two datasets with 10 records each, what is the maximum possible number of records in the output?
+####  How many records would be in the output of a cross join/cartesian join?
+####  What is Parquet?
+
+Parquet is a columnar storage format available to Hadoop projects, its highly efficient and uses several methods of compression.
+
+####  What does it mean that parquet is columnar storage?
+####   Parquet is stored efficiently on disk and is easy to query, traits that make it useful for big data. What are the downsides of the parquet format?
+####   How can Parquet's columnar storage efficiently encode the column values: "Kentucky, Kentucky, Kentucky, Kentucky, Virginia, Virginia, Virginia"?
+####   What is RLE?
+####  What is Dictionary encoding?
+####   How can we partition files we write using dataframes in Spark?
+####  How is a partitioned parquet file stored in the filesystem?
+
+
+
+####   What are some benefits of storing your data in partitions?
+
+#### What does it mean to push down predicates?
+
+---
 
 #### Broadcast Joins
 (aka Map-side Joins or broadcast hash join)
