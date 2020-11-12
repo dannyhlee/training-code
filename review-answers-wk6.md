@@ -80,22 +80,70 @@ For one, there is a memory limit.  The default limit for `spark.sql.autoBroadcas
 
 #### How do we see the logical and physical plans produced to evaluate a DataSet?
 
+```Dataset.explain(extended = true)
+
+```scala
+== Parsed Logical Plan ==
+StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4071aa13,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
+
+== Analyzed Logical Plan ==
+timestamp: timestamp, value: bigint
+StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4071aa13,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
+
+== Optimized Logical Plan ==
+StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4071aa13,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
+
+== Physical Plan ==
+StreamingRelation rate, [timestamp#0, value#1L]
+```
+
 ####  What is a join condition?
+
 ####  What is the difference between inner, outer left, outer right, and outer full joins?
+
 ####  What is a cross join / cartesian join?
+
 ####  If I join two datasets with 10 records each, what is the maximum possible number of records in the output?
+
 ####  How many records would be in the output of a cross join/cartesian join?
+
 ####  What is Parquet?
 
-Parquet is a columnar storage format available to Hadoop projects, its highly efficient and uses several methods of compression.
+Parquet is a columnar storage format available to Hadoop projects, its highly efficient and uses several methods of compression and encoding to reduce the overall size of data and provides significate performance gains by eliminating non-matches early, and saving the cost of processing in later stages through  predicate pushdown.  
+
+Parquets columnar format has the advantage over rows in that we dont have to scan over entire rows to get selected column data out of each row, instead they are contained together on the disk, adjacent to one another and we can get that data back without reading the entire row.
+
+Parquet helps reduce query latency even farther than static partitioning, along with Dictionary encoding, Bit packing and RLE (run length encoding)  Parquet offers an alternative solution to SQL databases.
 
 ####  What does it mean that parquet is columnar storage?
+
+Columnar storage means that data is not organized into rows of multiple columns with one row of data including many columns.  Instead the data is stored with other data of the same kind.  A column for year would be stored with all the years together. These groups of column data would be stored in a **Row Group**, which is some number of rows.  Each **Row Group** has a **File Footer** which contains the metadata for that row group.
+
 ####   Parquet is stored efficiently on disk and is easy to query, traits that make it useful for big data. What are the downsides of the parquet format?
+
+The downsides of the parquet format is that it is not as easy to write to, making edits to and appending new data is a time-consuming and a process that  takes meticulousness.  Because data is immutable, making changes means that you have to overwrite the file/write a new file(?).  It also is a binary format, and tools for working with it are  not as ubiquitous as with text files.
+
 ####   How can Parquet's columnar storage efficiently encode the column values: "Kentucky, Kentucky, Kentucky, Kentucky, Virginia, Virginia, Virginia"?
+
+By using Dictionary and Run-Length encoding.  A table identifying "Kentucky" as `id 1` and Virginia as `id 2` and storing them as `4,1 3,2` where 4 represents the number of instances of Kentucky, and 1 represents its `id`.
+
 ####   What is RLE?
+
+Run Length encoding is a form of lossless compression that is often used in lossless image compression.  By counting elements of a recurring pattern and then post-pending a single instance of the pattern with the count, significant savings can often be had.  An example:
+
+`butbutbutbutterparkay`=> `but4terparkay`
+`aaaaabbbbbbcbcb`=> `a5b6cb2`
+
 ####  What is Dictionary encoding?
+
+Dictionary encoding is achieved by building a dictionary of values found in a given column.  The dictionary is stored per column chunk as integers using the RLE/Bit-packing hybrid encoding.  If it grows too large, encoding will fall back to plain encoding.
+
 ####   How can we partition files we write using dataframes in Spark?
+
+
 ####  How is a partitioned parquet file stored in the filesystem?
+
+
 
 
 
@@ -165,7 +213,3 @@ They are both distributed collections of data that are processed using the catal
 In Spark 2.0 they are unified and DataFrame is just a DataSet that contains generic Row objects instead of specific Scala case classes.
 
 ex: DataSet[Comic] - a dataset of comics, DataSet[Person] a dataset of persons, DataSet[Row] means a dataset containing generic Rows - or a DataFrame.  We can also call DataFrames "untyped DataSets".
-
-
-
-
