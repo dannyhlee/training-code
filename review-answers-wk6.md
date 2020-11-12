@@ -39,24 +39,40 @@ For one, there is a memory limit.  The default limit for `spark.sql.autoBroadcas
 
 #### What is Spark SQL?
 
-
-
+Spark SQL is a Spark module built for structured data processing that sits atop Spark.  It facilitates the querying of data using  SQL queries and the Dataset API.  It also includes a cost-based optimizer that helps finds way to make queries more efficient.
 
 #### How does Spark SQL relate to the Spark applications we've been writing, using RDDs?
+
+By adding a relational database like structure for RDDs it allows developers to import relational data from Parquet files and Hive tables, run SQL queries over imported data and existing RDDs and easily write RDDs to Hive tables or Parquet files.
 
 #### How does Spark SQL evaluate a SQL query?
 
 #### What is the catalyst optimizer?
 
+The Catalyst optimizer offers rule-based and cost-based optimization of SQL queries.  It uses these rules and costs to generate multiple execution plans and chooses the lowest cost one.  After analysis, Catalyst creates a **logical optimization plan** applying rule-based optimization (new rules can be added).  Then it takes the logical plan and generates one or more physical plans, evaluates their costs and chooses the lowest cost.  Finally, it generates the code necessary to run on each machine and compiles it into Java bytecode.
+
+deep dive @ databricks: https://databricks.com/blog/2015/04/13/deep-dive-into-spark-sqls-catalyst-optimizer.html
+
 #### Why are there multiple APIs to work with Spark SQL?
+
+They were released at different times, with slightly different functionality.  Spark 1.3 released DataFrames and Spark 1.6 released DataSets as strongly typed DataFrames.  In Spark 2.0 they brought them together.
 
 #### What are DataFrames?
 
+DataFrames are the most common Structured API. similar to tables in SQL or collections in mongo, they represent a table of data with rows and columns.  The list of columns and the types of those columns represent the schema.  They can span multiple machines and have similar incarnations in R and Python (on single machines).
+
 #### What are DataSets?
+
+DataSets are type-safe versions of Spark's structured API for Java and Scala.  They are not available in Python and R because they are dynamically typed.  The DataSet API allows users to assign a Java class to the records inside a DataFrame, and manipulate them as a collection of typed objects.
+
 
 #### How are DataFrames and DataSets "unified" in Spark 2.0?
 
+DataFrame APIs were merged with the Datasets APIs and a DataFrame is an alias for a collection of generic objects `Dataset[Row]`where row is a generic untyped JVM object.  
+
 #### What is the SparkSession?
+
+
 
 #### Can we access the SparkContext via a SparkSession?
 
@@ -82,7 +98,6 @@ For one, there is a memory limit.  The default limit for `spark.sql.autoBroadcas
 
 ```Dataset.explain(extended = true)
 
-```scala
 == Parsed Logical Plan ==
 StreamingRelation DataSource(org.apache.spark.sql.SparkSession@4071aa13,rate,List(),None,List(),None,Map(),None), rate, [timestamp#0, value#1L]
 
@@ -213,3 +228,7 @@ They are both distributed collections of data that are processed using the catal
 In Spark 2.0 they are unified and DataFrame is just a DataSet that contains generic Row objects instead of specific Scala case classes.
 
 ex: DataSet[Comic] - a dataset of comics, DataSet[Person] a dataset of persons, DataSet[Row] means a dataset containing generic Rows - or a DataFrame.  We can also call DataFrames "untyped DataSets".
+
+
+
+
