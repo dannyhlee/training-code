@@ -158,13 +158,27 @@ StreamingRelation rate, [timestamp#0, value#1L]
 
 ####  What is a join condition?
 
+A join condition (aka join expression) relate two tables in some logical way.  When the join condition is met, the rows matched will be returned to be operated on.
+
 ####  What is the difference between inner, outer left, outer right, and outer full joins?
+
+**Inner joins** returns records that match values on both tables.
+**Left Outer Joins** Returns all records from the left table and the matched records from the right table, unmatched records will be NULL.
+**Right Outer Joins** Returns all records from the right table, if no matching row from the left table exists, NULL will appear in the row.
+**Full Outer Joins** Returns records from both sides, unmatched rows will show as NULL.
+
 
 ####  What is a cross join / cartesian join?
 
+A **cartesian** or **cross join** returns all records from the one table combined with every row of the tables it is being joined to.  In other words, every possible combination.
+
 ####  If I join two datasets with 10 records each, what is the maximum possible number of records in the output?
 
+A **full outer join** would output 10 rows.
+
 ####  How many records would be in the output of a cross join/cartesian join?
+
+A **cartesian join**  would produce an output of 100 records. 
 
 ####  What is Parquet?
 
@@ -199,16 +213,33 @@ Dictionary encoding is achieved by building a dictionary of values found in a gi
 
 ####   How can we partition files we write using dataframes in Spark?
 
+`df.write.partitionBy(value)`
+
+Bucket can be done with:
+`df.write.bucketBy(42, "name")`
 
 ####  How is a partitioned parquet file stored in the filesystem?
 
-
-
-
+A partitioned parquet file is divided into subfolders that correspond to:
+`<column name>=<value>`
+```
+   .----- date_year=2020                       .--- part-00001
+--|						  .--- date_month=01 --|
+   '---- date_year=2019 --|					   '--- part-00002
+		                  `--- date_month=02
+```
 
 ####   What are some benefits of storing your data in partitions?
 
-#### What does it mean to push down predicates?
+We benefit by dividing our data into partitions that we care about (low cardinality).  This we way we can filter out data and reduce the amount of data that we are querying on.  If we partition our data into "cities" and are looking for just "Reston", we can leave out every other city's data.
+
+A common partitioning style is by date (year-month-day).
+
+#### What does it mean to push down predicates in relation to Parquet?
+
+Pushing down predicates is a strategy used by Parquet to filter out data by adding a lower level filter that discards non-matching records before assembling and returning them to the requestor.  
+
+The idea is to move the predicate (`WHERE` statements) closer to the data source engine to increase the performance of queries by removing extraneous data, rather than after it has been loaded to Spark's memory.
 
 ---
 
