@@ -72,25 +72,69 @@ DataFrame APIs were merged with the Datasets APIs and a DataFrame is an alias fo
 
 #### What is the SparkSession?
 
-
+In Spark 2.0, its a consolidation of the concepts of Spark Context, SQL Context, and Hive Context .  SparkContext and SQLContext functionality are included out of the box, Hive support can be added with `.enableHiveSupport()` when initializing SparkSession.
 
 #### Can we access the SparkContext via a SparkSession?
 
+Yep, built in.
+
 #### What other contexts are superseded by SparkSession?
+
+SQLContext (for working in Spark SQL, DFs and DSs) and HiveContext for reading and writing to Hive tables.
 
 #### What are some data formats we can query with Spark SQL?
 
+SparkSQL works with SQL/HiveQL, DFs and DSs.
+
 #### Are DataSets lazily evaluated, like RDDs?
+
+Yes, computations are only triggered when an action is invoked.  When an action is invoked Spark's query optimizer optimizes the logical plan and generates a physical plan for efficient execution in a parallel and distributed manner.  You can use .explain() to explore the plans.
 
 #### What are some functions available to us when using DataFrames?
 
+Some functions available to a `Untyped Dataset[Rows]`(aka DataFrame) are:
+- `persist`or `cache`
+- `createTempView`or `createGlobalTempView`
+- `dtypes`: returns all column names and data types as array
+- `explain`: prints physical plan `explain(true)` returns all plans
+- `printSchema`: returns the schema of the Dataset
+- `storageLevel`: returns storage level
+
 #### What's the difference between aggregate and scalar functions?
+
+Aggregate functions operate on groups of values, and scalar functions operate on one value.  
+
+Aggregate functions: `avg(), count(), first(), last(), sum(), max()`
+Scalar functions: `col(), ??`
 
 #### How do we convert a DataFrame to a DataSet?
 
+By creating a `case class` and then calling `df.as[SomeCaseClass]` on it.
+```
+case class Company(name: String, foundingYear: Int, numEmployees: Int)
+val inputSeq = Seq(Company("ABC", 1998, 310), Company("XYZ", 1983, 904), Company("NOP", 2005, 83))
+val df = sc.parallelize(inputSeq).toDF()
+
+val companyDS = df.as[Company]
+companyDS.show()
+```
+
+You can also deal with tuples to convert DF to DS without a case class:
+```
+val rdd = sc.parallelize(Seq((1, "Spark"), (2, "Databricks"), (3, "Notebook")))
+val df = rdd.toDF("Id", "Name")
+
+val dataset = df.as[(Int, String)]
+dataset.show()
+```
+
 #### How do we provide structure to the data contained in a DataSet?
 
+By building a case class ??
+
 #### How do we make a Dataset queryable using SQL strings?
+
+By creating a Temporary view of the table...
 
 #### What is the return type of spark.sql("SELECT * FROM mytable") ?
 
