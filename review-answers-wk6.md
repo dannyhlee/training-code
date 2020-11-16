@@ -19,13 +19,13 @@ https://jaceklaskowski.gitbooks.io/mastering-spark-sql/content/spark-sql-joins.h
 
 #### How does a shuffle hash join work in Spark?
 
-The shuffle hash join takes the two RDDs and transfers data over the network so that data from each RDD that share the same hash value are colocated on the same partition.  Its an expensive operation, which can be avoided when the RDDs have a **known partitioner** such as when the preceeding operation passes the same Partitioner to both RDDs.  In that case, the data will be split up the same way and no shuffle will need to take place and the operation becomes a narrow dependency.
+The shuffle hash join is a join operation that takes two RDDs and shuffles (aka transfers) data over the network so that data from each RDD are collcated on the same partition. Its network transfer makes this an expensive operation, which can only be avoided when the RDDs have a **known partitioner** such as when the preceeding operation passes the same Partitioner to both RDDs.  In that case, the data will be split up the same way and no shuffle will need to take place and the operation becomes a narrow dependency.
 
 #### How does a broadcast join work in Spark?
 
-The broadcast join is a strategy of taking a smaller dataset (that is, an RDD) and broadcasting it as a broadcast variable.  First, we map the RDD to the driver, then we broadcast the resul to each partition.  Once the data has been broadcast, it is combined with each partition of the larger RDD in a **mapside combine**.  
+The broadcast join is a strategy of joining two sets of data, without initiating an expensive shuffle has join.  We do this by taking the smaller dataset (aka RDD) and broadcasting it to each partition.  First, we map over the RDD in the driver, then we broadcast the result to each partition.  Once the data has been broadcast, it is combined with each partition of the larger RDD in a **mapside combine**.  
 
-Another strategy is to use broadcast joins for highly skewed keys in your RDD, you create a HashMap of just these skewed keys and do a broadcast join.  Then, you filter out those keys and do a standard join with the reduced sized data.
+Another strategy is to use broadcast joins for highly skewed keys in your RDD, you create a HashMap of just these skewed keys and do a broadcast join.  Then, you filter out those keys and do a standard join with the reduced sized data.  Skewed keys are keys whose data are proportionally much larger than the rest of the dataset. 
 
 #### Why are broadcast joins significantly faster than shuffle joins?
 
@@ -35,7 +35,7 @@ In a way, its intuitive in the same way that Hadoop/Yarn brings the compute to t
 
 #### Why can't we always use broadcast joins?
 
-For one, there is a memory limit.  The default limit for `spark.sql.autoBroadcastJoinThreshold` is 10mb, but it is limited by system memory resources (current max is 8gb per object).  If we have 20 executors, and we are broadcasting a 1 GB data frame, that will cost us 20 GB of RAM.
+The memory cost of broadcast joins can be a prohibitive factor.  The default limit for `spark.sql.autoBroadcastJoinThreshold` is 10mb (max 8gb per object), but how useful this is limited by each nodes memory resources.  If we have 20 executors, and we are broadcasting a 1 GB data frame, that will cost us 20 GB of RAM.
 
 #### What is Spark SQL?
 
@@ -64,7 +64,6 @@ DataFrames are the most common Structured API. similar to tables in SQL or colle
 #### What are DataSets?
 
 DataSets are type-safe versions of Spark's structured API for Java and Scala.  They are not available in Python and R because they are dynamically typed.  The DataSet API allows users to assign a Java class to the records inside a DataFrame, and manipulate them as a collection of typed objects.
-
 
 #### How are DataFrames and DataSets "unified" in Spark 2.0?
 
