@@ -222,10 +222,10 @@ Bucket can be done with:
 A partitioned parquet file is divided into subfolders that correspond to:
 `<column name>=<value>`
 ```
-   .----- date_year=2020                       .--- part-00001
---|						  .--- date_month=01 --|
-   '---- date_year=2019 --|					   '--- part-00002
-		                  `--- date_month=02
+   .----- date_year=2020                        .--- part-00001
+--|			   .--- date_month=01 --|
+   '---- date_year=2019 --|                     '--- part-00002
+		           `--- date_month=02
 ```
 
 ####   What are some benefits of storing your data in partitions?
