@@ -53,7 +53,7 @@ RDD 1: ("a", 1.1), ("b", 2.2), ("c", 3.3)
 RDD 2: ("a", "alpha"), ("b", "beta"), ("c", "gamma")
 product of join: ("a", (1.1, "alpha")), ("b", (2.2, "beta")), ("c", (3.3, "gamma"))
 
-This is a specific example of a join, joins exist in many contexts.  Most notably in RDBMSs because your RDBMS stored "normalized" data.  One of the goals of normalizing your data is to never represent the same piece of data more than 1 time.  This means our RDBMSs will have many tables the frequently need to be joined together.
+This is a specific example of a join, joins exist in many contexts.  Most notably in RDBMSs because your RDBMS stored "normalized" data.  One of the goals of normalizing your data is to never represent the same piece of data more than 1 time.  This means our RDBMSs will have many tables that frequently need to be joined together.
 
 #### Types of Joins
 What happens if we have:
@@ -61,9 +61,9 @@ RDD 1: ("a", 1.1), ("b", 2.2), ("d", 4.4)
 RDD 2: ("a", "alpha"), ("b", "beta"), ("c", "gamma") ?
 
 It depends on the type of join we're using.  There are 4 types: Inner, Left Outer, Right Outer, Full Outer.
-If we use an inner join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta")))
-If we use a left outer join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta")), ("d", (4.4, None)))
-If we use a right outer join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta")), ("c", (None, "gamma")))
+If we use an inner join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta"))
+If we use a left outer join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta")), ("d", (4.4, None))
+If we use a right outer join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta")), ("c", (None, "gamma"))
 If we use a full outer join, then output:  ("a", (1.1, "alpha")), ("b", (2.2, "beta")), ("c", (None, "gamma")), ("d", (4.4, None))
 
 When you don't the type of join specified, it's most often an inner join.
@@ -74,7 +74,40 @@ Using RDDs .join method, the join condition is the keys in each RDD being equal.
 
 The typical use case of joining has the join condition evaluate to true for one or zero pairs of records.  That being said, we can have join conditions that evaluate to true based on any condition we prefer.  If your join condition is an inequality like > or <, we call that a *theta join*.  If you join condition returns true in all cases, we call that a *cartesian join*.
 
+You can think of the Join Condition deciding which records get put together in the output, then the type of join determines what (if anything) we should do with the records that didn't have any matches.
 
+The most common join condition is having the value in one column in dataset 1 be equal to the value in a column in dataset 2.  If the two columns we're joining on have the same name we call it a *natural join*
+
+### Parquet
+
+Apache Parquet is a data storage format used with Apache tools + beyond.  We write to parquet files and read from parquet files, parquet is not like a running database or a program, it's just a storage format.  Parquet is meant to be used for large amounts of data that is very infrequently written/edited and often read or queried.
+
+If our use case is storing/writing some data once, then querying it for information 100000 times, Parquet is a great choice
+If our use case is storing/writing some data incrementally over time and only occasionally reading it back out, Parquet is most often a bad choice.  Parquet is formatted to be efficient, meaning it taks relatively little space on disk, and to be fast to query.  We are able quickly retrieve records meeting conditions from parquet files.  It achieves these by being quite difficult and time consuming to write.
+
+Parquet is *columnar* data storage format.  This is in contrast to formats like .csv or .tsv that contain data in rows in order on disk.  
+Where student-house.csv has ssn, first_name, last_name, ssn, first_name, last_name, ssn, first_name, last_name, ssn, first_name, last_name, ...
+Our parquet file has ssn, ssn, ssn, ... first_name, first_name, first_name, ... last_name, last_name, last_name, ...
+^ This is a demo of columnar, parquet files are more complicated.  They are split up into "row groups" and contain metadata at multiple levels.
+
+Since Parquet is columnar, it can encode the data for each column efficiently for that column.  Some of the efficiency gains parquet achieves:
+- Dictionary encoding: if a column has a relatively small number of values, Parquet will store it as a dictionary with byte keys instead of reproducing entire values for each entry in a column. ex:
+    - Gryffindor, Gryffindor, Gryffindor, Hufflepuff, Hufflepuff, Ravenclaw, Gryffindor, Slytherin, ..
+    - 1,1,1,2,2,3,1,4, .., combined with a dictionary 1->Gryffindor, 2->Hufflepuff, ...
+- Run Length Encoding (RLE): if a column has a number of values in a row that are the same, we encode that "run" of values as the value and the length of the run, instead of repeating the value. ex:
+    - Gryffindor, Gryffindor, Gryffindor, Gryffindor, Gryffindor, Gryffindor, Gryffindor, Gryffindor, Gryffindor, Hufflepuff, ...
+    - Gryffindor 9, Hufflepuff ...
+- Bit Packing: Parquet offers int32, int64, and int96 data types for integral values, but will "pack" smaller values so they don't take up unnecessary space.  Tiny numbers are stored more efficiently under the hood than taking up 32 bits each.
+
+A few more features/things to know: Parquet can handle null values, which it encodes efficiently using RLE, and it handle arbitrarily nested data structures.  Parquet is a binary format, so reading it with a text editor or cat or similar is not going to work very well.  Parquet can and by default is compressed as well as being encoded using the optmiziations above.  We can also partition our Parquet files.
+
+### Streaming Data in Spark
+
+Streaming data refers to data that's being produced and processed in near-real time.  Spark provides multiples functionalities, multiple APIs for handling streaming data.  Both of them are built on Spark core, at the very base level we're still working with RDDs.  Both of the ways Spark handles streams involve breaking down the incoming data into small batches and processing those batches.
+
+spark-streaming : Spark streaming makes use of a StreamingContext, which is similar to a SparkContext.  Streams are handled as DStreams, which are streams of data turned into small batches and processed using RDDs directly.  Spark-streaming is like working with RDDs, except the underlying data source is streaming data.  In general, spark streaming provides more fine-grained control.
+
+Spark Structured Streaming : Structured streaming is a feature of Spark SQL.  Streams are handled as DataFrames/DataSets that are incrementally updated with new data coming in through the stream.  We work with the DataFrame + DataSet API, and our DFs/DSs have rows appended to the bottom of them as streaming data comes in.  In general, structured streaming is easier to use well, since it just makes use of the Spark SQL APIs.  Structured streaming takes input from files, sockets (not for prod), Kafka and Kinesis.  Kafka we'll see next week.
 
 
 

@@ -1,9 +1,10 @@
 package hellosparksql
 
-import org.apache.spark.sql.{SparkSession, functions}
+import org.apache.spark.sql.types.IntegerType
+import org.apache.spark.sql.{Column, SparkSession, functions}
 
 object Runner {
-  def main(args: Array[String]) = {
+  def mainFunc(args: Array[String]) = {
     //SparkSession is the entry point for Spark applications using Spark SQL
     //  It's new in Spark 2.0 and it unifies earlier disparate entrypoints:
     //  SparkContext, SqlContext and HiveContext
@@ -26,6 +27,78 @@ object Runner {
     //We can access our familar SparkContext if we like
     spark.sparkContext.setLogLevel("WARN")
 
+    //helloSparkSqlDemo(spark)
+    //parquetWritingDemo(spark)
+    joinsDemo(spark)
+
+  }
+
+  def joinsDemo(spark: SparkSession) = {
+    import spark.implicits._
+
+    val studentHouseDf = spark.read.parquet("student-partitioned.parquet")
+
+    val houseDetailDf = spark.createDataset(List(
+      HouseDetail("Gryffindor", 40, "Red"),
+      HouseDetail("Slytherin", 80, "Green"),
+      HouseDetail("Ravenclaw", 60, "Blue"),
+      HouseDetail("Hufflepuff", 100, "Yellow")
+    )).toDF()
+
+//    houseDetailDf.show()
+//    houseDetailDf.printSchema()
+
+    studentHouseDf.join(houseDetailDf, "house")
+    // The above is an inner join
+    // every student has a house, and every house has at least one student,
+    // so the outer joins (left, right, full) will have the same output.
+
+    // This joins on an always true join condition:
+    // joins every record in the left table with every record in the right table
+    // total size of 1000*4=4000
+    studentHouseDf.crossJoin(houseDetailDf).show()
+
+    //reproduce house detail join using custom condition:
+    studentHouseDf.join(houseDetailDf, studentHouseDf("house") === houseDetailDf("house")).show()
+
+    //not a particularly useful join, but interesting for demo purposes
+    studentHouseDf
+      .join(houseDetailDf, studentHouseDf("age") > 30 && studentHouseDf("house") === houseDetailDf("house"), "full").show(4000)
+
+  }
+
+  def parquetWritingDemo(spark: SparkSession) = {
+    import spark.implicits._
+
+    val df = spark.read.option("header", "true").csv("student-house.csv")
+      .withColumn("age", $"age".cast(IntegerType))
+    // if you need to cast multiple columns, use a select instead
+
+    df.show()
+
+    df.printSchema()
+
+    //write a parquet file
+    df.write.parquet("student-house.parquet")
+
+    //read that parquet file
+    val readDf = spark.read.parquet("student-house.parquet")
+
+    //maintains all schema information
+    readDf.show()
+    readDf.printSchema()
+
+    //We've discussed partitioning in Hive, parquet and spark support partitioning as well.
+    df.write.partitionBy("house").parquet("student-partitioned.parquet")
+
+    //writing and reading partitions has the same benefits it had when discussed in Hive,
+    // and all the machinery is handled for us
+    val partDf = spark.read.parquet("student-partitioned.parquet")
+    partDf.show()
+}
+
+  def helloSparkSqlDemo(spark: SparkSession) = {
+    import spark.implicits._
     //From the Spark Session we can create a DataFrame.  We're going to read from
     // a Json file here.  We can also produce DataFrames from RDDs, parquet files,
     // Hive tables, SQL tables, ... Spark input formats generally.
@@ -130,5 +203,6 @@ object Runner {
 
   case class Name(first: String, last:String) {}
 
+  case class HouseDetail(house: String, points: Int, color: String) {}
 
 }
