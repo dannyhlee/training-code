@@ -174,7 +174,7 @@ A **cartesian** or **cross join** returns all records from the one table combine
 
 ####  If I join two datasets with 10 records each, what is the maximum possible number of records in the output?
 
-A **full outer join** would output 10 rows.
+That would be 100 records.
 
 ####  How many records would be in the output of a cross join/cartesian join?
 
