@@ -98,6 +98,7 @@ Some functions available to a `Untyped Dataset[Rows]`(aka DataFrame) are:
 - `explain`: prints physical plan `explain(true)` returns all plans
 - `printSchema`: returns the schema of the Dataset
 - `storageLevel`: returns storage level
+- `show`: shows the data in the dataframe, `show(false)` shows untruncated data
 
 #### What's the difference between aggregate and scalar functions?
 
