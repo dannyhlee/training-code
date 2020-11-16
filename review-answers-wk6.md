@@ -3,7 +3,7 @@
 
 #### In broad terms, what is a Join?
 
-A join combines two DataSets by combining their records and creating a new DataFrame.  This is an important operation to bring related data together for analysis, data processing and storage.  By combining one dataset with 0 or more records from another dataset we can produce a dataset that contains records from both sets.  In the process we make our dataset "wider" (more columns).
+A join combines the records of two sets of data and produces a new dataset.  THis is important for data analysis, data processing and storage.  By combining one dataset with 1 or more records from another dataset we can produce a dataset that contains records from both sets.  In the process we make our dataset "wider" (more columns).
 
 Calling join on an RDD will combine the records in two RDDs. .join expects RDD<K,V>, where <K,V> is a two-tuple. The output will be an RDD containing a <K,V> pair with the same key and the values of both RDDs combined for the value.  
 
