@@ -144,10 +144,34 @@ In Kafka, scalability was the driving factor for pull architecture.  Large numbe
 for zookeeper: the configuration file
 `$ bin/zookeeper-server-start.sh config/zookeeper.properties`
 
+This includes data directory, clientpot, max clients
+
 for kafka broker service: the configuration file
 `$ bin/kafka-server-start.sh config/server.properties`
 
+This includes broker id's, number of threads for network and I/O, log dir, num partitions, replication factor, number ISR, log retention time, log size before new log segment, zookeeper connection/timeout, 
+
+for topics:
+`$ bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092`
+
+include the bootstrap-server 9092 and --topic.
+
 #### What is Kafka Stream Processing? 
+
+Kafka Streams is a client library for operating on the input coming from Kafka topics and output to another topic.  Joining, aggregating, transforming data while providing fault-tolerant state, with exactly-once processing, with low latency and event-time based windowing operations.
+
+A stream represents an unbounded, continuously updating data set.  Ordered, replayable and fault-tolerant sequence of immutable data records, where a data record is defined as a key-value pair.
+
+The Streams DSL is build on top of the Streams Processor API and builds abstractions for streams and tables (KStream, Ktable, GlobalKTable), input them, compose transformations and write the results back to kafka topics.  The process will be continuously processed.
+
+The Processor API can be used to build stateless as well as stateful operations.
+
 #### Does Kafka guarantee that it will preserve the order of produced events? 
+
+Kafka only preserves order inside of a partition, a consumer reading from a partition is guaranteed to read the events in the same order that they were written.  This doesnt guarantee that the events are being read in the same order in which they were received by Kafka.
+
 #### What are the caveats? 
+
+We can ensure ordering of events that have the same key because they will be hashed the same and sent to the same partitioned.
+
 #### How can we make sure that Kafka preserves the order of events where it matters?
