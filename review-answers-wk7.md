@@ -121,11 +121,32 @@ Machines must maintain a session with ZooKeeper via heartbeat and if it is a fol
 
 #### What is Apache Zookeeper? 
 
+Zookeeper is a centralized service for maintaining configuration information, naming, providing distributed syncronization and providing group services.  Its built for distributed applications and provides a set of primitives that can built upon to build more robust, less brittle software and avoid race conditions and deadlock.
+
+In Kafka, Zookeeper stores its metadata like paritition location and topics configuration.  In 2019 a plan was made to integrate metadata management within Kafka.
 
 #### What’s the difference between pulling and pushing messages/events in a pub sub architecture? 
+
+Pulling messages allows consumers to decide when to retrieve messages, and ack that it received it.  In push delivery, the publisher initiates the sending of the message and the endpoint acks the message by returning an HTTP success code.  
+
+Push is good for multiple topics that must be processed by a webhook.  Pull is good for large volume of messages and where efficiency and throughput of processing is critical.
+
 #### Which does Kafka use? 
+
+In Kafka, scalability was the driving factor for pull architecture.  Large numbers of consumers can subscribe without performance degrading.  Kafka can handle events at 100k per second from producers, so consumers can pull data at different paces and can either process in real-time or catch up when it can.
+
 #### How long does Kafka store messages by default? 
+
+168 hours or 7 days. (Topic configuration setting: `retention.ms`)
+
 #### What are our configuration options? 
+
+for zookeeper: the configuration file
+`$ bin/zookeeper-server-start.sh config/zookeeper.properties`
+
+for kafka broker service: the configuration file
+`$ bin/kafka-server-start.sh config/server.properties`
+
 #### What is Kafka Stream Processing? 
 #### Does Kafka guarantee that it will preserve the order of produced events? 
 #### What are the caveats? 
