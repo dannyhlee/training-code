@@ -44,11 +44,11 @@ changes to data will persist.
 
 #### Types of NoSQL databases: 
 
-- CP database - Consistency and Partition tolerance, when partition occurs, not available.
+- CP database - Consistency and Partition tolerance, when partition occurs, not available. (ex: mongoDB)
 
-- AP database - Availability and Partition tolerance, when partition occurs, available, but consistency not guaranteed.
+- AP database - Availability and Partition tolerance, when partition occurs, available, but consistency not guaranteed. (ex: cassandra)
 
-- CA database - Consistency and Availability, but cannot handle partitions/fault tolerance.  Not practical.
+- CA database - Consistency and Availability, but cannot handle partitions/fault tolerance.  Not practical in distributed systems.
 
 
 
