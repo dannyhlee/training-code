@@ -10,35 +10,33 @@ libraryDependencies += groupID % artifactID % revision
 libraryDependencies += groupID % artifactID % revision % configuration
 
 // examples:
-
 // equivalent assuming project's Scala version is 2.11
 libraryDependencies += "org.scala-stm" % "scala-stm_2.11" % "0.8"
 libraryDependencies += "org.scala-stm" %% "scala-stm" % "0.8"
 
 ```
-The single percent  (%) symbol is a method used to build dependencies (technically, [creating ModuleID objects from strings](https://www.scala-sbt.org/release/docs/Library-Dependencies.html)) . Using double percent (%%) after the groupID inject your project's Scala version and appending it to the artifact name. This is useful in the case your Scala version is changed, regardless, sbt will retrieve the right version.  
+The single percent  (%) symbol is a method used to build dependencies (technically, [creating ModuleID objects from strings](https://www.scala-sbt.org/release/docs/Library-Dependencies.html)) . Using double percent (%%) after the groupID injects your project's Scala version and appends it to the artifact name. This is useful in the case your Scala version is changed.  In some cases, this can cause an error if there there is no applicable artifact with the Scala version appended.  
 
 Multiple dependencies can be added using a Seq() and ++= notation:
 ```
 libraryDependencies ++= Seq(
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.9.0",
   "io.spray" %%  "spray-json" % "1.3.5",
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.11.3",
   "com.fasterxml.jackson.module" % "jackson-module-scala" % "2.0.2"
 )
 ```
 
-#### Why do we use databases instead of just writing to file?
-
-Databases give us structure in the form of entities and relationships.  These can be used to more efficiently store and access data, queries to find specific data in a database can be more complex and specific than reading from a text file.  By adding transactional rules for the update of data we reduce the possibility of updating errors, corrupted data by partial writes and multiple users accessing the data at the same time and overwriting one another's changes.  Security is improved with access controls and only publically showing what we want through views.  We provide a controlled method of concurrent access and crash recovery.
-
 #### What is a port number?
 
-A port number is a 16-bit unsigned integer (0 to 65535) that identifies a communication endpoint on a server.  When a client makes a request to a server it attempts to address a specific virtual port.  Ports are software based and managed by the server OS.  Each port is associated to a specific process or service.  For example, HTTP protocol goes to port 80, FTP to 20 and 21 (21 to connect hosts, 20 to transfer data), SSH port 22, SMTP 25, HTTPS 443, RDP 3389.
+A 16-bit unsigned Int (0 to 65535) identifying a communication endpoint on a server.  When a client makes a request to a server, it attempts to do so by addressing a specific virtual port.  Ports are software based and managed by the server OS and the client software.  Each port is associated to a specific process or service.  For example, HTTP protocol goes to port 80, FTP to 20 and 21 (21 to connect hosts, 20 to transfer data), SSH port 22, SMTP 25, HTTPS 443, Spark UI 4040, Hadoop ResourceManager WebUI 8088.
 
 #### What's the default port for MongoDB?
 
 The default port is 27017.
+
+#### Why do we use databases instead of just writing to file?
+
+Databases provide structure in the form of **entities** and **relationships**.  These allow for the the more efficient storage and access of data, as well as for more complex queries on data in a database than could be achieved by reading from a text file.  By adding transactional rules for data updates, we reduce the possibility of updating errors, or corrupted data caused by partial writes.  Controlled methods of concurrent access provide protection from the possibility that multiple users modify data simultaneously and overwrite one another's changes.  Databases also provide improved security through access controls, limiting what data is publically exposed through views. 
 
 #### What is a database?
 
@@ -46,23 +44,21 @@ A database is an organized collection of structured data stored electronically. 
 
 #### What is a collection?
 
-In MongoDB, a collection is made up of documents, and is analogous to RDBMS tables.  There can be many collections in a MongoDB database.  Collections are entities that organize documents into some kind of logical collection.  Though Mongo doesnt really enforce rules that dictates how these collections are organized (aka Schema), it makes sense to collect documents in some sort of organized fashion.
+A MongoDB **collection** is made up of **documents**, and is analogous to RDBMS tables.  There can be many collections in a MongoDB database.  Collections are entities that organize documents into some kind of logical collection.  Though Mongo doesnt really enforce rules that dictates how these collections are organized (aka schema), it makes sense to collect documents in some sort of organized fashion.
 
 #### What is a document?
 
-A document is container which stores data in key-value pair in a format called BSON, which is similar to JSON.  Instead of text BSON is a binary file and includes additional types that aren't available in JSON.  These fields can hold all sorts of data including simple types (int, char, str), data structures (lists, arrays, sets) and embedded sub-documents.  This style of embedding documents within documents is generally referred to as "denormalized".  A document has a max size of 16mb.
+A document is a container which stores data as Key-Value pairs in a format called BSON, which is similar to JSON.  Instead of text (like JSON), BSON is a binary file and includes additional types that aren't available in JSON.  These fields can hold all sorts of data including simple types (int, char, str), data structures (lists, arrays, sets) and embedded sub-documents.  This style of embedding documents within documents is generally referred to as "denormalized".  A document has a max size of 16mb.
 
 #### What rules does Mongo enforce about the structure of documents inside a collection?
 
-Mongo does not enforce a strict structure on the types of data, or the way in which data is stored.  Different strategies will provide read speed or update speed and these factors must be taken into account when deciding on a Data modelling strategy.  Embedding provides better read performance, as well as the ability to request and retrieve related data in a single operation.  It also provides a way to updated all related data in a single atomic write operation.  However, there is a limited document size and depth, currently BSON's maximum data size is 16 mb and 100 layers of nesting.
+Mongo does not enforce a strict structure on the types of data, or the way in which data is stored.  Different strategies will provide read speed or update speed and these factors must be taken into account when deciding on a Data modelling strategy.  Embedding provides better read performance, as well as the ability to request and retrieve related data in a single operation.  It also provides a way to updated all related data in a single **atomic** write operation.  However, there is a limited document size and depth, currently BSON's maximum data size is 16MB and 100 layers of nesting.
 
-Normalized data models are used when duplication doesn't provide enough read performance, compared to the implications of duplication.  And also, when its necessary to represent complex m-to-m relationships or modelling large hierarchical data sets.
+Normalized data models are used when duplication doesn't provide enough read performance, compared to the implications of duplication.  Normalized models are also used when its necessary to represent complex m-to-m relationships or modelling large hierarchical data sets.
 
 #### What is JSON?
 
-JSON stands for JavaScript Object Notation and is a lightweight data-transporting format.  Easy to read and write, its commonly used on the internet to transmit data in a structured fashion between server and client.   There's 
-
-Structurally, the data is written as name/value pairs and separated with a colon.  All fields are enclosed with double quotes.  An object is enclosed with curly braces, while arrays are enclosed with square brackets.
+JSON stands for JavaScript Object Notation and is a lightweight data-transporting format.  Easy to read and write, its commonly used to transmit data in a structured fashion between server and client. Structurally, the data is written as name/value (key-value) pairs and separated with a colon.  All fields are enclosed with double quotes.  An object is enclosed with curly braces, while arrays are enclosed with square brackets.
 
 #### What are JSON data types?
 
@@ -74,7 +70,7 @@ BSON is Binary JSON, a binary format used for representing data structures, incl
 
 #### What are some of the data types included in BSON?
 
-Along with String, BSON stores its numbers in native format (32/62 bit Integer, Double for floating point values, Boolean, Arrays, Objects, Null, Timestamp, Date, Md5 Binary Data, ObjectID and RegExp.
+Along with String, BSON stores its numbers in native format (32/64-bit Integer, Double for floating point values, Boolean, Arrays, Objects, Null, Timestamp, Date, Md5 Binary Data, ObjectID and RegExp.
 
 #### What is an ObjectId?
 
@@ -224,29 +220,30 @@ The term is used to generalize database operations and is also used very often w
 
 #### What is a distributed application? A distributed data store?
 
-A distributed application operates on more than one physical or virtual machine at the same time, with a network connection between them.  An example is an application with has a client front end that requests data from a server where data is stored.  It could include multiple clients and/or multiple servers.
+A distributed application operates on more than one physical or virtual machine at the same time, with a network connection between them.  One example is an application where the front-end client requests data from a back-end server.  This setup could often includes multiple clients and/or multiple servers, all connected over a network.
 
-A distributed data store is infrastructure that can split data across multiple physical servers and across multiple data centers.  It typically takes the form of a cluster of storage units, with a mechanism for data synchronization and coordination between cluster nodes.  (Ex: Amazon S3, MS Azure)
+A distributed data store is infrastructure that splits data across multiple physical servers and across multiple data centers.  It typically takes the form of a cluster of storage units, with a mechanism for data synchronization and coordination between cluster nodes.  (Ex: Amazon S3, MS Azure, HDFS)
 
-DDS provide redundancy and scalability, by providing the ability to spin up new instances if one goes down or if more capacity is required.
+DDSs provide redundancy and scalability (elastcity) through the ability to spin up new instances if one goes down or if more capacity is required.
 
 #### What is High Availability? How is it achieved in Mongo?
 
-High availability is a characteristic or property of a system to almost always be available and avoiding downtime.   By having high fault tolerance the system is able to experience faults and continue functioning (albeit with degraded functionality).  One way to provide redundancy is through failover behaviors such as MongoDB's replica sets.  A replica set is at least 3 instances of a database running in a distributed manner.  If the primary fails, a replica will take over and with services like Amazon S3 new instances can be started up.
+High availability is a property of a system to almost always be available and avoiding downtime.   Such a systen is able to experience faults and continue functioning, albeit with degraded functionality.  One way to provide redundancy is through failover behaviors such as MongoDB's replica sets.  A replica set is at least 3 duplicated instances of a database running in a distributed manner (as separate instances, possibly in separate machines/data centers).  If the primary database fails, a replica will take over as primary.  Alerts can be sent out and new instances can be spun up automatically.  In a declarative system like Kubernetes, this would mean that Kubernetes' pod autoscaler would start deploying new pods to return to the configured state.
 
 #### What is Scalability? How is it achieved in Mongo?
 
-Scalability is a characteristic of a system to be able to grow to meet growing amount of work (demand).  In order to meet growing demand MongDB uses sharding to balance the load on a database by taking a large database and breaking it into a number of smaller databases running across multiple servers.  
+Scalability is a propery of a system to be able to grow to meet a growing amount of work (demand).  This can be through providing vertical/horizontal scalablity, and in MongoDB's case, the use of sharding to balance the load on a database by taking a large database and breaking it into a number of smaller databases running across multiple servers.  
 
 #### Explain replica sets and sharding
 
-A replica set is an identical data set, copied over to multiple instances.  It provides system redundancy and high availability.  By having multiple copies on multiple servers, possibly in multiple locations, replica sets provide fault-tolerance.  They can also add performance value because clients reading data from servers can use different servers (closer to them) reducing demand to any single server instance.  When changes are made to the Primary, the changes to the oplog are propagated through the system so that the secondaries can perform the same operations.  
+A replica set is an identical data set, copied over to multiple instances.  It provides system redundancy and high availability.  By having multiple copies of data on multiple servers, possibly in multiple locations, replica sets provide fault-tolerance.  They can also add performance value because clients reading data from servers can use different servers (closer to them) reducing demand to any single server instance.  When changes are made to the Primary, the changes to the oplog are propagated through the system so that the secondaries can perform the same operations.  
 
-Sharding is a method of distributing data across multiple machines.  When load is too much for one server, there are two ways to address the load--Veritical and Horizontal scaling.  Horizontal scaling involved improves the single server through hardware improvements.  Horizontal scaling is done by adding additional servers.   
-
-A sharded cluster each contains a subset of the sharded data.  Each shard can be deployed as a replica set.  The mongos acts as a query router, providing an interface between clients and the cluster.  Config servers store meta data and configuration settings.
+Sharding is a method of distributing data across multiple machines, by breaking it down into smaller chunks.  These chunks can also be replicated across machines. 
+A sharded cluster each contains a subset of the sharded data.  Each shard can be deployed as a replica set.  The MongoDB sharded cluster router is called **mongos** and it acts as a query router, providing an interface between clients and the cluster.  Config servers store meta data and configuration settings.
 
 Sharding distributes read and write requests, distributes data across shards, and provides high availability.  
+When demand on servers becomes too much for one server, there are two ways to address the load--Veritical and Horizontal scaling.  Servers can be vertically scaled by adding more memory/cpu/hardware components.  However, this can quickly become costly because of the special hardware required to handle such large amount of memory and cpu processing power.  The other option is to use horizontal scaling, which is done by adding more servers that are often-times commodity hardware readily available and comparatively, inexpensive.
+
 
 #### What is the CAP Theorem?
 
@@ -304,9 +301,11 @@ SQL Dialects are sub-groupings of SQL commands into groups according to their fu
 
 #### What are DML, DDL, DQL?
 
-Data Manipulation Language (Insert)
-Data Definition Language (Create)
-Data Query Language (Select)
+DDL - Data Definition Language (CREATE, DROP, ALTER, TRUNCATE, COMMENT, RENAME) - deals with database schemas and descriptions, how data should reside/entities
+DQL - Data Query Language (SELECT) - Sometimes DML
+DML - Data Manipulation Language (INSERT, UPDATE, DELETE, EXPLAIN PLAN) - deals with data storing, modifying, retrieving, updating and deleting
+DCL - Data Control Language (GRANT, REVOKE) - controls rights and permissions on the database
+TCL - Transaction Control Language (COMMIT, ROLLBACK, SAVEPOINT, SET TRANSACTION) - deals with transactions within a database
 
 #### What does SELECT do?
 
