@@ -12,8 +12,11 @@ Scala Throwable extends [java.lang.Throwable](https://docs.oracle.com/javase/8/d
 ## java.lang.Exception  Subclass List
 
 - [AclNotFoundException](https://docs.oracle.com/javase/8/docs/api/java/security/acl/AclNotFoundException.html "class in java.security.acl")
+reference to non-existent ACL (Access Control List)
 - [ActivationException](https://docs.oracle.com/javase/8/docs/api/java/rmi/activation/ActivationException.html "class in java.rmi.activation")
+general exception used by the activation interfaces
 - [AlreadyBoundException](https://docs.oracle.com/javase/8/docs/api/java/rmi/AlreadyBoundException.html "class in java.rmi")
+thrown when trying to bind an object in registry that is already bound
 - [ApplicationException](https://docs.oracle.com/javase/8/docs/api/org/omg/CORBA/portable/ApplicationException.html "class in org.omg.CORBA.portable")
 - [AWTException](https://docs.oracle.com/javase/8/docs/api/java/awt/AWTException.html "class in java.awt")
 - [BackingStoreException](https://docs.oracle.com/javase/8/docs/api/java/util/prefs/BackingStoreException.html "class in java.util.prefs")
@@ -89,7 +92,7 @@ Scala Throwable extends [java.lang.Throwable](https://docs.oracle.com/javase/8/d
 
 ## java.lang.RuntimeException Subclass List
 
-[AnnotationTypeMismatchException](https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/AnnotationTypeMismatchException.html "class in java.lang.annotation")
+- [AnnotationTypeMismatchException](https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/AnnotationTypeMismatchException.html "class in java.lang.annotation")
 - [ArithmeticException](https://docs.oracle.com/javase/8/docs/api/java/lang/ArithmeticException.html "class in java.lang")
 - [ArrayStoreException](https://docs.oracle.com/javase/8/docs/api/java/lang/ArrayStoreException.html "class in java.lang")
 - [BufferOverflowException](https://docs.oracle.com/javase/8/docs/api/java/nio/BufferOverflowException.html "class in java.nio")
@@ -143,10 +146,76 @@ Scala Throwable extends [java.lang.Throwable](https://docs.oracle.com/javase/8/d
 - [WebServiceException](https://docs.oracle.com/javase/8/docs/api/javax/xml/ws/WebServiceException.html "class in javax.xml.ws")
 - [WrongMethodTypeException](https://docs.oracle.com/javase/8/docs/api/java/lang/invoke/WrongMethodTypeException.html "class in java.lang.invoke")
 
+## java.io.IOException
+
+Thrown...
+
+- [ChangedCharSetException](https://docs.oracle.com/javase/8/docs/api/javax/swing/text/ChangedCharSetException.html "class in javax.swing.text")
+...when charset is changed
+- [CharacterCodingException](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/CharacterCodingException.html "class in java.nio.charset")
+...on character encoding or decoding error
+- [CharConversionException](https://docs.oracle.com/javase/8/docs/api/java/io/CharConversionException.html "class in java.io")
+base class for character conversion expcetions
+- [ClosedChannelException](https://docs.oracle.com/javase/8/docs/api/java/nio/channels/ClosedChannelException.html "class in java.nio.channels")
+...when attempt to operate on channel closed to that operation
+- [EOFException](https://docs.oracle.com/javase/8/docs/api/java/io/EOFException.html "class in java.io")
+...to signal EOF or end of stream reached unexpectedly
+- [FileLockInterruptionException](https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileLockInterruptionException.html "class in java.nio.channels")
+...when another thread interrupts a file lock request
+- [FileNotFoundException](https://docs.oracle.com/javase/8/docs/api/java/io/FileNotFoundException.html "class in java.io")
+...thrown when file doesn't exist or cant be accessed
+- [FilerException](https://docs.oracle.com/javase/8/docs/api/javax/annotation/processing/FilerException.html "class in javax.annotation.processing")
+...on errors involving Filer guarantees
+- [FileSystemException](https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystemException.html "class in java.nio.file")
+general class for file system exceptions.
+- [HttpRetryException](https://docs.oracle.com/javase/8/docs/api/java/net/HttpRetryException.html "class in java.net")
+...to indicate HTTP request not possible
+- [IIOException](https://docs.oracle.com/javase/8/docs/api/javax/imageio/IIOException.html "class in javax.imageio")
+...to signal run-time failure of r/w operations
+- [InterruptedByTimeoutException](https://docs.oracle.com/javase/8/docs/api/java/nio/channels/InterruptedByTimeoutException.html "class in java.nio.channels")
+checked exception when async operation timeouts
+- [InterruptedIOException](https://docs.oracle.com/javase/8/docs/api/java/io/InterruptedIOException.html "class in java.io")
+...to signal I/O operation has been interrupted
+- [InvalidPropertiesFormatException](https://docs.oracle.com/javase/8/docs/api/java/util/InvalidPropertiesFormatException.html "class in java.util")
+...to indicate oper could not complete because property format error
+- [JMXProviderException](https://docs.oracle.com/javase/8/docs/api/javax/management/remote/JMXProviderException.html "class in javax.management.remote")
+...jmx error
+- [JMXServerErrorException](https://docs.oracle.com/javase/8/docs/api/javax/management/remote/JMXServerErrorException.html "class in javax.management.remote")
+...jmx error
+- [MalformedURLException](https://docs.oracle.com/javase/8/docs/api/java/net/MalformedURLException.html "class in java.net")
+
+- [ObjectStreamException](https://docs.oracle.com/javase/8/docs/api/java/io/ObjectStreamException.html "class in java.io")
+
+- [ProtocolException](https://docs.oracle.com/javase/8/docs/api/java/net/ProtocolException.html "class in java.net")
+
+- [RemoteException](https://docs.oracle.com/javase/8/docs/api/java/rmi/RemoteException.html "class in java.rmi")
+
+- [SaslException](https://docs.oracle.com/javase/8/docs/api/javax/security/sasl/SaslException.html "class in javax.security.sasl")
+
+- [SocketException](https://docs.oracle.com/javase/8/docs/api/java/net/SocketException.html "class in java.net")
+
+- [SSLException](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLException.html "class in javax.net.ssl")
+
+- [SyncFailedException](https://docs.oracle.com/javase/8/docs/api/java/io/SyncFailedException.html "class in java.io")
+
+- [UnknownHostException](https://docs.oracle.com/javase/8/docs/api/java/net/UnknownHostException.html "class in java.net")
+
+- [UnknownServiceException](https://docs.oracle.com/javase/8/docs/api/java/net/UnknownServiceException.html "class in java.net")
+
+- [UnsupportedDataTypeException](https://docs.oracle.com/javase/8/docs/api/javax/activation/UnsupportedDataTypeException.html "class in javax.activation")
+
+- [UnsupportedEncodingException](https://docs.oracle.com/javase/8/docs/api/java/io/UnsupportedEncodingException.html "class in java.io")
+
+- [UserPrincipalNotFoundException](https://docs.oracle.com/javase/8/docs/api/java/nio/file/attribute/UserPrincipalNotFoundException.html "class in java.nio.file.attribute")
+
+- [UTFDataFormatException](https://docs.oracle.com/javase/8/docs/api/java/io/UTFDataFormatException.html "class in java.io")
+
+- [ZipException](https://docs.oracle.com/javase/8/docs/api/java/util/zip/ZipException.html "class in java.util.zip")
+
 
 ## java.lang.Error Subclass List
 
-[AnnotationFormatError](https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/AnnotationFormatError.html "class in java.lang.annotation")
+- [AnnotationFormatError](https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/AnnotationFormatError.html "class in java.lang.annotation")
 - [AssertionError](https://docs.oracle.com/javase/8/docs/api/java/lang/AssertionError.html "class in java.lang")
 - [AWTError](https://docs.oracle.com/javase/8/docs/api/java/awt/AWTError.html "class in java.awt")
 - [CoderMalfunctionError](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/CoderMalfunctionError.html "class in java.nio.charset")
