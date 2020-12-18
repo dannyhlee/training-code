@@ -1,8 +1,8 @@
 
 # Exceptions in Scala
 ## Notes:
-Scala Throwable extends [java.lang.Throwable](https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#java.lang.Throwable)
-Scala has no checked exceptions ([ref1](https://www.informit.com/articles/article.aspx?p=1849236&seqNum=12#:~:text=However%2C%20unlike%20Java%2C%20Scala%20has,IOException%2C%20you%20must%20declare%20it.))
+- Scala Throwable extends [java.lang.Throwable](https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#java.lang.Throwable)
+- Scala has no checked exceptions ([ref1](https://www.informit.com/articles/article.aspx?p=1849236&seqNum=12#:~:text=However%2C%20unlike%20Java%2C%20Scala%20has,IOException%2C%20you%20must%20declare%20it.))
 
 #### Important methods:
 - getMessage() - Returns a detailed message
