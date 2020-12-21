@@ -40,9 +40,16 @@ If its not Surjective, it means there are points in the domain that don't have a
 ---
 
 ![injective-non-surjective](./images-category_theory/injective-non-surjective.png)
+injective non-surjective
+
 ![injective-surjective](./images-category_theory/injective-surjective.png)
+injective surjective
+
 ![non-injective-non-surjective](./images-category_theory/non-injective-non-surjective.png)
+non-injective, non-surjective
+
 ![non-injective-surjective](./images-category_theory/non-injective-surjective.png)
+non-injective, surjective
 
 #### Math symbols
 
