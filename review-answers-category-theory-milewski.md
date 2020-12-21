@@ -22,8 +22,8 @@ In mathematics, an identity function, also called an identity relation or identi
 
 #### Collapsing function
 
-isEven(): All even numbers => boolean true or false
-decades(): 1980-1989 -> 1980s, 1990-1999 -> 1990s
+isEven(): All even numbers => boolean true or false   
+decades(): 1980-1989 -> 1980s, 1990-1999 -> 1990s   
 
 #### Injective function (MONIC / Monomorphism)
 
