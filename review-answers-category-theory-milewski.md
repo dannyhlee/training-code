@@ -22,16 +22,16 @@ In mathematics, an identity function, also called an identity relation or identi
 
 #### Collapsing function
 
-isEven(): All even numbers => boolean true or false
-decades(): 1980-1989 -> 1980s, 1990-1999 -> 1990s
+isEven(): All even numbers => boolean true or false   
+decades(): 1980-1989 -> 1980s, 1990-1999 -> 1990s   
 
 #### Injective function (MONIC / Monomorphism)
 
-In mathematics, an injective function (also known as injection, or one-to-one function) is a function that maps distinct elements of its domain to distinct elements of its codomain.[1] In other words, every element of the function's codomain is the image of at most one element of its domain
+In mathematics, an injective function (also known as injection, or one-to-one function) is a function that maps distinct elements of its domain to distinct elements of its codomain. In other words, every element of the function's codomain is the image of at most one element of its domain
 
 #### Surjective function (EPIC / Epimorphism)
 
-n mathematics, a function f from a set X to a set Y is surjective (also known as onto, or a surjection), if for every element y in the codomain Y of f, there is at least one element x in the domain X of f such that f(x) = y.
+In mathematics, a function f from a set X to a set Y is surjective (also known as onto, or a surjection), if for every element y in the codomain Y of f, there is at least one element x in the domain X of f such that f(x) = y.
 
 ---
 
