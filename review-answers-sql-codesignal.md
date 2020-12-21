@@ -200,11 +200,17 @@ reference: (XPath docs - https://www.w3schools.com/xml/xpath_intro.asp)
     FROM Successors
     ORDER BY birthday;
 
-
-
-
+## Convert filesize and Sort by non-selected column
               
-  
+      SELECT e.id, e.email_title, 
+        (CASE 
+            WHEN e.size < 1048576 THEN
+                CONCAT(FLOOR(e.size / 1024.0), ' Kb')
+            ELSE
+                CONCAT(FLOOR(e.size / 1048576), ' Mb')
+        END) as short_size
+    FROM 
+    (SELECT * FROM emails ORDER BY size DESC) e;
     
 
     
