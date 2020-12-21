@@ -51,6 +51,8 @@ non-injective, non-surjective
 ![non-injective-surjective](./images-category_theory/non-injective-surjective.png)
 non-injective, surjective
 
+---
+
 #### Math symbols
 
 1. ∀ - upside down A means "for all"
