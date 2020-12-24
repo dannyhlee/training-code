@@ -70,3 +70,19 @@ non-injective, surjective
 
 6. ∵ - three dots triangle, point down
    means "because" or "due to"
+
+---
+### Category Theory 3.1: categories, orders, monoids
+
+smallest category is category of 0 elements.  
+Next is 1 element with **identity** function.
+
+*orders* represent a relation (eg. a --> b where a is less than or equial to b)
+
+- a *preorder* will be composable (eg. a --> b --> c, where a is less than b, and b is less than c, then a must be less than c).
+- in a *preorder* there is either a relationship or not.  its a binary situation (on or off, related or not)
+- a thin category has on preorder and vice-versa
+
+A thin category (or posetal) is a category where homsets each contain at most one morphism.
+
+A homset is the set or collection of all morphisms from A to B for some given ordered pair (A, B) of objects from some given category.
