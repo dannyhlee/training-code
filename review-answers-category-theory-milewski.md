@@ -86,3 +86,12 @@ Next is 1 element with **identity** function.
 A thin category (or posetal) is a category where homsets each contain at most one morphism.
 
 A homset is the set or collection of all morphisms from A to B for some given ordered pair (A, B) of objects from some given category.
+
+---
+
+A monoid is a set which satisfies **associativity** and has an **identity element** (unit).  
+
+Associativity: (a * b) * c = a * (b * c) holds.
+
+Identity element: There is a **unit** named e where e * a = a and a * e = a.  Much like 1 in multiplication.
+
